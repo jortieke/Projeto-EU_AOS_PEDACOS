@@ -14,10 +14,13 @@ header{
     border: 0;
 }
 
-header div{
+.navegar{
     background-color: #10491B;
     min-width: 80%;
     min-height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
 
 }
 
@@ -75,6 +78,37 @@ section {
     display: flex;
     justify-content: center;
 
+}
+
+
+.login-box{
+    background-color: #f7f1e6;
+    min-width: 100%;
+    min-height: 95%;
+    display: flex;
+    justify-content:flex-start;
+    
+}
+
+.login{
+    background-color: #f9f5ec;
+    min-width: 25%;
+    min-height: 95%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    border: 1px;
+    border-color: black;
+    border-style: solid;
+}
+
+.puzzle {
+    background-color: #f7f1e6;
+    min-width: 49%;
+    min-height: 95%;
+    display: flex;
+    justify-content: center;
+    padding: 0;
 }
 
 footer{
