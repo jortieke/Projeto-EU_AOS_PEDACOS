@@ -24,10 +24,17 @@ header{
 
 }
 
+.navegar img{
+    width: 100px; 
+    height: 45px; 
+    padding-left: 100px; 
+    padding-top: 5px;
+}
+
 .menu{
     display: flex;
-    justify-content: space-between;
     list-style: none;
+    padding-left: 800px;
 }
 
 body{
@@ -101,6 +108,7 @@ section {
     border-color: black;
     border-style: solid;
 }
+
 
 .puzzle {
     background-color: #f7f1e6;
