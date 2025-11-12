@@ -8,15 +8,17 @@
     <header>
         <div class="navegar">
             <div>
-                <img src="imgs/logo2.png" alt="">
+                <a href="index.html"><img src="imgs/logo2.png" alt=""></a>
             </div>
             <ul class="menu">
-                <li>Sobre Mim</li>
-                <li>Fórum</li>
-                <li>Sobre o Livro</li>
-                <li>Cadastro</li>
-                <li>Acesse sua Conta</li>
+                <li><a href="sobre-mim.html">Sobre Mim</a></li>
+                <li><a href="forum.html">Fórum</a></li>
+                <li><a href="sobre-o-livro.html">Sobre o Livro</a></li>
+                <li><a href="cadastro.html">Cadastro</a></li>
             </ul>
+        </div>
+        <div class="acessar">
+            <a href="login.html">Acesse sua Conta</a>
         </div>
     </header>
 </head>
@@ -31,22 +33,24 @@
             
             </div>
             
-            <div class="login">
-                Nome:
+            <div class="login-cadastro">
+                <span>Nome:</span>
                 <input type="text" id="inputNome">
-                Email:
+                <span>Email:</span>
                 <input type="text" id="inputEmail">
-                Telefone:
+                <span>Telefone:</span>
                 <input type="text" id="inputTelefone">
-                Usuário:
+                <span>Usuário:</span>
                 <input type="text" id="inputUsuário">
-                Senha:
+                <span>Senha:</span>
                 <input type="text" id="inputSenha">
-                Confirme a senha:
+                <span>Confirme a senha:</span>
                 <input type="text" id="inputConfirme">
+                <label for="inputNewsletter">
+                <input type="checkbox" id="inputNewsletter" style="align-self: flex-start;"> 
                 Desejo receber a newsletter.
+                </label>
                 <button>Cadastrar</button>
-                
             </div>
 
         </div>
@@ -54,6 +58,6 @@
     </section>
 </body>
 <footer>
-
+    <span>Elaborado por João Ricardo Jortieke Junior, 2025.</span>
 </footer>
 </html>
