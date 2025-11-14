@@ -38,7 +38,7 @@
                 <input type="text" id="email_input">
                 <span>Senha:</span>
                 <input type="text" id="senha_input">
-                <button>Login</button> <br>
+                <button onclick="entrar()">Login</button> <br>
                 <span>Não tem conta? <br>
                 Cadastre-se <a href="cadastro.html" style="color: #702424;">aqui</a>.
                 </span>
@@ -58,20 +58,16 @@
 
 
     function entrar() {
-        aguardar();
+
 
         var emailVar = email_input.value;
         var senhaVar = senha_input.value;
 
         if (emailVar == "" || senhaVar == "") {
-            cardErro.style.display = "block"
-            mensagem_erro.innerHTML = "(Mensagem de erro para todos os campos em branco)";
-            finalizarAguardar();
+            alert('Mensagem de erro para todos os campos em branco');
             return false;
         }
-        else {
-            setInterval(sumirMensagem, 5000)
-        }
+        else {console.log('Ok')}
 
         console.log("FORM LOGIN: ", emailVar);
         console.log("FORM SENHA: ", senhaVar);
@@ -97,7 +93,6 @@
                     sessionStorage.EMAIL_USUARIO = json.email;
                     sessionStorage.NOME_USUARIO = json.nome;
                     sessionStorage.ID_USUARIO = json.id;
-                    sessionStorage.AQUARIOS = JSON.stringify(json.aquarios)
 
                     setTimeout(function () {
                         window.location = "./dashboard/cards.html";
@@ -111,7 +106,6 @@
 
                 resposta.text().then(texto => {
                     console.error(texto);
-                    finalizarAguardar(texto);
                 });
             }
 
@@ -120,10 +114,6 @@
         })
 
         return false;
-    }
-
-    function sumirMensagem() {
-        cardErro.style.display = "none"
     }
 
 </script>

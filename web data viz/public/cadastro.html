@@ -48,17 +48,17 @@
                 </div>
                 <div class="campo">
                     <span>Senha:</span>
-                    <input id="senha_input" type="password" placeholder="******" />
+                    <input id="senha_input" type="text" placeholder="******" />
                 </div>
                 <div class="campo">
                     <span>Confirmação da Senha:</span>
-                    <input id="confirmacao_senha_input" type="password" placeholder="******" />
+                    <input id="confirmacao_senha_input" type="text" placeholder="******" />
                 </div>
                 <label for="inputNewsletter">
                 <input type="checkbox" id="inputNewsletter" style="align-self: flex-start;"> 
                 Desejo receber a newsletter.
                 </label>
-                <button>Cadastrar</button>
+                <button onclick="cadastrar()">Cadastrar</button>
             </div>
 
         </div>
@@ -81,7 +81,7 @@
     var senhaVar = senha_input.value;
     var confirmacaoSenhaVar = confirmacao_senha_input.value;
     var cpfVar = cpf_input.value;
-    var idEmpresaVincular
+    var newsletterVar = inputNewsletter.value;
 
     // Verificando se há algum campo em branco
     if (
@@ -90,28 +90,10 @@
       senhaVar == "" ||
       confirmacaoSenhaVar == ""
       ) {
-      cardErro.style.display = "block";
-      mensagem_erro.innerHTML =
-        "(Mensagem de erro para todos os campos em branco)";
+      alert('Mensagem de erro para todos os campos em branco');
 
-      finalizarAguardar();
       return false;
-    } else {
-      setInterval(sumirMensagem, 5000);
-    }
-
-    // Verificando se o código de ativação é de alguma empresa cadastrada
-    for (let i = 0; i < listaEmpresasCadastradas.length; i++) {
-      if (listaEmpresasCadastradas[i].codigo_ativacao == codigoVar) {
-        idEmpresaVincular = listaEmpresasCadastradas[i].id
-        console.log("Código de ativação válido.");
-        break;
-      } else {
-        cardErro.style.display = "block";
-        mensagem_erro.innerHTML = "(Mensagem de erro para código inválido)";
-        finalizarAguardar();
-      }
-    }
+    } console.log('Ok');
 
     // Enviando o valor da nova input
     fetch("/usuarios/cadastrar", {
@@ -126,56 +108,29 @@
         emailServer: emailVar,
         senhaServer: senhaVar,
         cpfServer: cpfVar,
+        newsletterServer: newsletterVar
       }),
     })
       .then(function (resposta) {
         console.log("resposta: ", resposta);
 
         if (resposta.ok) {
-          cardErro.style.display = "block";
-
-          mensagem_erro.innerHTML =
-            "Cadastro realizado com sucesso! Redirecionando para tela de Login...";
+          alert("Cadastro realizado com sucesso! Redirecionando para tela de Login...");
 
           setTimeout(() => {
             window.location = "login.html";
           }, "2000");
 
-          limparFormulario();
-          finalizarAguardar();
+  
         } else {
           throw "Houve um erro ao tentar realizar o cadastro!";
         }
       })
       .catch(function (resposta) {
         console.log(`#ERRO: ${resposta}`);
-        finalizarAguardar();
+
       });
 
     return false;
-  }
-
-  // Listando empresas cadastradas 
-  function listar() {
-    fetch("/empresas/listar", {
-      method: "GET",
-    })
-      .then(function (resposta) {
-        resposta.json().then((empresas) => {
-          empresas.forEach((empresa) => {
-            listaEmpresasCadastradas.push(empresa);
-
-            console.log("listaEmpresasCadastradas")
-            console.log(listaEmpresasCadastradas[0].codigo_ativacao)
-          });
-        });
-      })
-      .catch(function (resposta) {
-        console.log(`#ERRO: ${resposta}`);
-      });
-  }
-
-  function sumirMensagem() {
-    cardErro.style.display = "none";
   }
 </script>
