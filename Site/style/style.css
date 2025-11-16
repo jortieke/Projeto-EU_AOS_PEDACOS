@@ -1,8 +1,10 @@
 html{
     height: 100%;
-    width: 100%;
-    margin: 0;
+    margin: 0; 
+    display: flex; 
+    flex-direction: column;
 }
+
 
 header{
     background-color: #702424;
@@ -13,6 +15,7 @@ header{
     align-items: flex-start;    
     border: 0;
     color: white;
+    position: relative;
 }
 
 /* Header e Menu*/
@@ -24,7 +27,6 @@ header{
     justify-content: center;
     text-align: center;
     color: white;
-    padding-top: 15px;
     padding-left: 60px;
 }
 
@@ -84,11 +86,12 @@ section {
 }
 
 .container-escuro{
-    background-color: #f7f1e6;
+    background-color:#f9f5ec;
     min-width: 100%;
     min-height: 90%;
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start;
+    
 }
 
 .faixa{
@@ -102,7 +105,6 @@ section {
     min-height: 90%;
     text-align: justify;
     padding: 0px;
-    border: 10px;
     border-color: #f7f1e6;
     border-style: solid;
 }
@@ -114,7 +116,6 @@ section {
     padding: 0;
     text-align: justify;
     background-clip: content-box, padding-box;
-    border: 10px;
     border-color: #f7f1e6;
     border-style: solid;
 }
@@ -176,7 +177,7 @@ section {
     background-color: #f7f1e6;
     max-width: auto;
     max-height: auto;
-    height: 800px;
+    height: 680px;
     width: 800px;
     display: flex;
     justify-content: center;
@@ -258,4 +259,138 @@ footer span{
 
 .rating label:hover, .rating label:hover ~ label {
     color: #702424;
+}
+
+/*Dashboard e KPIs*/
+
+.dash{
+    background-color: #f7f1e6;
+    width: 80%;
+    height: 600px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-around;
+    border-left: 10px;
+    border-color: #f9f5ec;
+    border-style: solid;
+}   
+
+.kpis{
+    background-color: #945B5B;
+    width: 19%;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-color: #f9f5ec;
+    border-style: solid;
+    border-radius: 3%;
+}
+
+.menu_lateral{
+    background-color: #945B5B; 
+    position: absolute;
+    top: 55px; 
+    right: 0; 
+    width: 150px; 
+    height: 200px; 
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000; 
+    display: none; 
+}
+
+.menu_lateral > .menu{
+    
+    display: flex;
+    flex-direction: column; 
+    list-style: none;
+    width: 100%;
+    gap: 10px; 
+    align-items: flex-start;
+
+}
+
+.cards{
+    display: flex;
+    align-items: center;
+    color: white;
+}
+
+.desc-kpi{
+    align-items: center;
+    text-align: center;
+}
+
+#capitulos {
+    background: #f3eadc;
+    padding: 15px 20px ;
+    border-radius: 8px;
+    border: 1px solid #d2c5b5;
+    max-width: 480px;
+    margin-top: 10px;
+    margin-left: 40px;
+    max-height: 540px;
+    overflow-y: auto;
+}
+
+#capitulos details {
+    margin-bottom: 18px;
+    padding: 10px 14px;
+    background: #f9f4ec;
+    border: 1px solid #d8cbb9;
+    border-radius: 6px;
+}
+
+#capitulos summary {
+    font-weight: bold;
+    color: #10491B;
+    cursor: pointer;
+    padding: 4px;
+}
+
+
+#capitulos button {
+    background: #945B5B;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin: 8px 0;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#capitulos button:hover {
+    background: #702424;
+}
+
+#capitulos label {
+    display: inline-block;
+    margin-right: 14px;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+#btnSalvarChapters {
+    background: #C3D1C6;
+    color: #fff;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    margin-top: 15px;
+}
+
+#btnSalvarChapters:hover {
+    background: #10491B;
+}
+
+#caixa_cap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;  
+    padding-right: 40px;
 }

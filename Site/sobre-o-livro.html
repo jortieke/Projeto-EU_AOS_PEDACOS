@@ -18,7 +18,20 @@
             </ul>
         </div>
         <div class="acessar">
-            <a href="login.html">Acesse sua Conta</a>
+            <span id="b_usuario">usuário</span>
+        </div>
+        <div>
+            <img src="imgs/user.png" alt="" style="width: 40px; height: 40px; padding-top: 5px; padding-left: 40px;">
+        </div>
+        <div>
+            <img onclick="exibirMenu()" src="imgs/sandwich.png" alt="" style="width: 40px; height: 40px; padding-top: 5px; padding-left: 30px;">
+        </div>
+        <div class="menu_lateral" id="menu_lateral">
+                <ul class="menu">
+                <li><a href="sobre-mim.html">Configurações</a></li>
+                <li><a href="painel.html">Verificar Painel</a></li>
+                <li onclick="sair()"><a href="index.html">Sair</a></li>
+            </ul>
         </div>
     </header>
 </head>
@@ -33,8 +46,18 @@
             <div class="book">
                 
                 <img src="imgs/capa-livro.jpg" style="width: 80%; height: 80%; padding-top: 25px;" alt="" > 
-                <div class="kpi"> 
-                    <h2>4.5</h2>
+                <div class="kpi">
+                    <div class="review">
+                        <div class="cards" id="cardAquarios">
+                            <div class="card-aquario">
+                                <div class="desc-aquario">
+                                    <div class="temperatura">
+                                        <h1 id="temp_aquario_${item.id}">4.5</h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>    
                 <div class="rating">
                 <input type="radio" id="star5" name="rating" value="5" />
@@ -61,10 +84,58 @@
             </div> -->
 
         </div>
-        <div class="faixa">
+        <div class="faixa"> </div>
     </section>
 </body>
 <footer>
     <span>Elaborado por João Ricardo Jortieke Junior, 2025.</span>
 </footer>
 </html>
+
+<script>
+    b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
+    var menu = false;
+
+    /* Autenticação */
+    if (sessionStorage.ID_USUARIO == undefined) {
+        alert("Você precisa estar logado para acessar esta página.");
+        window.location = "/login.html"; 
+    }
+
+    /* Pegar KPIs */
+
+    function exibirAquarios() {
+        JSON.parse(sessionStorage.AQUARIOS).forEach(item => {
+            document.getElementById("cardAquarios").innerHTML += `
+                    <div class="card-aquario">
+                        <div class="title-aquario">
+                            <h1>${item.descricao}</h1>
+                        </div>
+                        <div class="desc-aquario">
+                        <div class="temperatura">
+                            <p id="temp_aquario_${item.id}">-°C</p>
+                        </div>
+                        <div class="cor-alerta" id="card_${item.id}"></div>
+                    </div>
+                    </div>
+                    `
+        });
+    }
+
+     function exibirMenu(){
+        if (menu == false) {
+            menu = true;
+            menu_lateral.style.display = "flex";
+        } else { 
+            menu = false;
+            menu_lateral.style.display = "none";
+        }
+    }
+
+    function sair(){
+        sessionStorage.clear();
+        window.location.href = "login.html";
+    }
+    
+
+</script>

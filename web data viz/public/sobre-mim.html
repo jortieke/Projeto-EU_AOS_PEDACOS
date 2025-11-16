@@ -18,7 +18,20 @@
             </ul>
         </div>
         <div class="acessar">
-            <a href="login.html">Acesse sua Conta</a>
+            <span id="b_usuario">usuário</span>!</h3>
+        </div>
+        <div>
+            <img src="imgs/user.png" alt="" style="width: 40px; height: 40px; padding-top: 5px; padding-left: 40px;">
+        </div>
+        <div>
+            <img onclick="exibirMenu()" src="imgs/sandwich.png" alt="" style="width: 40px; height: 40px; padding-top: 5px; padding-left: 30px;">
+        </div>
+        <div class="menu_lateral" id="menu_lateral">
+                <ul class="menu">
+                <li><a href="sobre-mim.html">Configurações</a></li>
+                <li><a href="painel.html">Verificar Painel</a></li>
+                <li onclick="sair()"><a href="index.html">Sair</a></li>
+            </ul>
         </div>
     </header>
 </head>
@@ -49,3 +62,31 @@
     <span>Elaborado por João Ricardo Jortieke Junior, 2025.</span>
 </footer>
 </html>
+
+
+<script>
+    b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
+
+    /* Autenticação */
+    if (sessionStorage.ID_USUARIO == undefined) {
+        alert("Você precisa estar logado para acessar esta página.");
+        window.location = "/login.html"; 
+    }
+
+     function exibirMenu(){
+        if (menu == false) {
+            menu = true;
+            menu_lateral.style.display = "flex";
+        } else { 
+            menu = false;
+            menu_lateral.style.display = "none";
+        }
+        
+    }
+
+    function sair(){
+        sessionStorage.clear();
+        window.location.href = "login.html";
+    }
+    
+</script>

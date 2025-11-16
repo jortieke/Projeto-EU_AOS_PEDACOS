@@ -43,82 +43,65 @@
     <section>
         <div class="faixa"></div>
         <div class="container-escuro" id="container">
-            <div class="kpis">
-                <div class="cards" id="cardkpis">
-                    <div class="card-kpi">
-                        <div class="title-kpi">
-                            <h2>Número de Acessos</h2>
-                        </div>
-                        <div class="desc-kpi">
-                            <div class="temperatura">
-                                <p id="temp_kpi_${item.id}">12</p>
-                            </div>
-                            <div class="cor-alerta" id="card_${item.id}"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="cards" id="cardkpis">
-                    <div class="card-kpi">
-                        <div class="title-kpi">
-                            <h2>Tópicos Criados</h2>
-                        </div>
-                        <div class="desc-kpi">
-                            <div class="temperatura">
-                                <p id="temp_kpi_${item.id}">5</p>
-                            </div>
-                            <div class="cor-alerta" id="card_${item.id}"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="cards" id="cardkpis">
-                    <div class="card-kpi">
-                        <div class="title-kpi">
-                            <h2>Capítulos Lidos</h2>
-                        </div>
-                        <div class="desc-kpi">
-                            <div class="temperatura">
-                                <p id="temp_kpi_${item.id}">10/110</p>
-                            </div>
-                            <div class="cor-alerta" id="card_${item.id}"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="cards" id="cardkpis">
-                    <div class="card-kpi">
-                        <div class="title-kpi">
-                            <h2>Curtidas</h2>
-                        </div>
-                        <div class="desc-kpi">
-                            <div class="temperatura">
-                                <p id="temp_kpi_${item.id}">0</p>
-                            </div>
-                            <div class="cor-alerta" id="card_${item.id}"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="cards" id="cardkpis">
-                    <div class="card-kpi">
-                        <div class="title-kpi">
-                            <h2>Visualizações</h2>
-                        </div>
-                        <div class="desc-kpi">
-                            <div class="temperatura">
-                                <p id="temp_kpi_${item.id}">12</p>
-                            </div>
-                            <div class="cor-alerta" id="card_${item.id}"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="dash">
-                <canvas id="bar" width="300px" height="300px"></canvas>
-
-                <div id="caixa_cap">
-                    <div id="capitulos"></div>
-                </div>
-                
+                <canvas id="bar" style="width: 50%; align-self: center;"></canvas>
             </div>
-        </div>
+            <div class="kpis">
+                <div class="cards" id="cardAquarios">
+                    <div class="card-aquario">
+                        <div class="title-aquario">
+                            <h1>Número de Acessos</h1>
+                        </div>
+                        <div class="desc-aquario">
+                            <div class="temperatura">
+                                <p id="temp_aquario_${item.id}">12</p>
+                            </div>
+                            <div class="cor-alerta" id="card_${item.id}"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cards" id="cardAquarios">
+                    <div class="card-aquario">
+                        <div class="title-aquario">
+                            <h1>Tópicos Criados</h1>
+                        </div>
+                        <div class="desc-aquario">
+                            <div class="temperatura">
+                                <p id="temp_aquario_${item.id}">5</p>
+                            </div>
+                            <div class="cor-alerta" id="card_${item.id}"></div>
+                        </div>
+                    </div>
+                </div>
+                <h1>Interações</h1>
+                -------------------------------------
+                <div class="cards" id="cardAquarios">
+                    <div class="card-aquario">
+                        <div class="title-aquario">
+                            <h1>Curtidas</h1>
+                        </div>
+                        <div class="desc-aquario">
+                            <div class="temperatura">
+                                <p id="temp_aquario_${item.id}">0</p>
+                            </div>
+                            <div class="cor-alerta" id="card_${item.id}"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cards" id="cardAquarios">
+                    <div class="card-aquario">
+                        <div class="title-aquario">
+                            <h1>Visualizações</h1>
+                        </div>
+                        <div class="desc-aquario">
+                            <div class="temperatura">
+                                <p id="temp_aquario_${item.id}">12</p>
+                            </div>
+                            <div class="cor-alerta" id="card_${item.id}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         
         </div>
@@ -144,9 +127,9 @@
         datasets: [{
             label: 'Capítulos Lidos',
             data: [3, 5, 12, 4, 2, 3],
-            borderColor: '#10491B',
-            backgroundColor: '#C3D1C6',
-            borderWidth: 1
+            borderColor: 'black',
+            backgroundColor: 'blue',
+            borderWidth: 3
         }]
     },
     options: {
@@ -184,7 +167,6 @@
     }
 });
 
-
 /* Pegar KPIs */
 
     function exibirAquarios() {
@@ -217,69 +199,9 @@
     }
 
     function sair(){
-        sessionStorage.clear();
-        window.location.href = "login.html";
+        sessionStorage.clear;
     }
     
-
-    function montarCapitulos() {
-    var blocos = [
-        ["Parte I", 1, 20],
-        ["Parte II", 21, 40],
-        ["Parte III", 41, 60],
-        ["Parte IV", 61, 80],
-        ["Parte V", 81, 100],
-        ["Parte VI", 101, 110]
-    ];
-
-    var html = "";
-
-    for (var i = 0; i < blocos.length; i++) {
-        var titulo = blocos[i][0];
-        var inicio = blocos[i][1];
-        var fim = blocos[i][2];
-
-        html += "<details>";
-        html += "<summary>" + titulo + " (Cap. " + inicio + " a " + fim + ")</summary>";
-
-        html += "<button onclick=\"marcarBloco(" + inicio + "," + fim + ")\">Marcar tudo neste bloco</button><br>";
-
-        for (var c = inicio; c <= fim; c++) {
-            html += "<label><input type='checkbox' id='cap" + c + "'> Cap. " + c + "</label> ";
-        }
-
-        html += "</details>";
-    }
-
-    html += "<button id='btnSalvarChapters' onclick='salvarCapitulos()'>Salvar Leitura</button>";
-
-    document.getElementById("capitulos").innerHTML = html;
-}
-
-function marcarBloco(inicio, fim) {
-    for (var c = inicio; c <= fim; c++) {
-        var checkbox = document.getElementById("cap" + c);
-        if (checkbox) {
-            checkbox.checked = true;
-        }
-    }
-}
-
-function salvarCapitulos() {
-    var lidos = [];
-
-    for (var i = 1; i <= 110; i++) {
-        var c = document.getElementById("cap" + i);
-        if (c && c.checked === true) {
-            lidos.push(i);
-        }
-    }
-
-    alert("Capítulos salvos: " + lidos.join(", "));
-}
-
-
-montarCapitulos();
 /*------------------------------------------------------------------------------------*/    
     
     let proximaAtualizacao;
