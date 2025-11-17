@@ -8,6 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <title>Painel</title>
+
     <header>
         <div class="navegar">
             <div>
@@ -27,10 +28,11 @@
             <img src="imgs/user.png" alt="" style="width: 40px; height: 40px; padding-top: 5px; padding-left: 40px;">
         </div>
         <div>
-            <img onclick="exibirMenu()" src="imgs/sandwich.png" alt="" style="width: 40px; height: 40px; padding-top: 5px; padding-left: 30px;">
+            <img onclick="exibirMenu()" src="imgs/sandwich.png" alt=""
+                 style="width: 40px; height: 40px; padding-top: 5px; padding-left: 30px;">
         </div>
         <div class="menu_lateral" id="menu_lateral">
-                <ul class="menu">
+            <ul class="menu">
                 <li><a href="sobre-mim.html">Configurações</a></li>
                 <li><a href="painel.html">Verificar Painel</a></li>
                 <li onclick="sair()"><a href="index.html">Sair</a></li>
@@ -42,89 +44,70 @@
 <body>
     <section>
         <div class="faixa"></div>
+
         <div class="container-escuro" id="container">
+
             <div class="kpis">
-                <div class="cards" id="cardkpis">
-                    <div class="card-kpi">
-                        <div class="title-kpi">
-                            <h2>Número de Acessos</h2>
+                    <div class="cards">
+                        <div class="card-kpi">
+                            <div class="title-kpi"><h2 id="kpi_titulo">Capítulos Lidos</h2></div>
+                            <div class="desc-kpi">
+                                <div class="temperatura">
+                                    <p id="kpi_capitulos">0/110</p>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+                     <div class="cards">
+                <div class="card-kpi">
+                    <div class="title-kpi"><h2>Postagens no Fórum</h2></div>
                         <div class="desc-kpi">
                             <div class="temperatura">
-                                <p id="temp_kpi_${item.id}">12</p>
+                                <p id="kpi_postagens">0</p>
                             </div>
-                            <div class="cor-alerta" id="card_${item.id}"></div>
                         </div>
                     </div>
                 </div>
-                <div class="cards" id="cardkpis">
+
+                <div class="cards">
                     <div class="card-kpi">
-                        <div class="title-kpi">
-                            <h2>Tópicos Criados</h2>
-                        </div>
+                        <div class="title-kpi"><h2>Curtidas Recebidas</h2></div>
                         <div class="desc-kpi">
                             <div class="temperatura">
-                                <p id="temp_kpi_${item.id}">5</p>
+                                <p id="kpi_curtidas_forum">0</p>
                             </div>
-                            <div class="cor-alerta" id="card_${item.id}"></div>
                         </div>
                     </div>
                 </div>
-                <div class="cards" id="cardkpis">
+
+                <div class="cards">
                     <div class="card-kpi">
-                        <div class="title-kpi">
-                            <h2>Capítulos Lidos</h2>
-                        </div>
+                        <div class="title-kpi"><h2>Visualizações Recebidas</h2></div>
                         <div class="desc-kpi">
                             <div class="temperatura">
-                                <p id="temp_kpi_${item.id}">10/110</p>
+                                <p id="kpi_visualizacoes_forum">0</p>
                             </div>
-                            <div class="cor-alerta" id="card_${item.id}"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="cards" id="cardkpis">
-                    <div class="card-kpi">
-                        <div class="title-kpi">
-                            <h2>Curtidas</h2>
-                        </div>
-                        <div class="desc-kpi">
-                            <div class="temperatura">
-                                <p id="temp_kpi_${item.id}">0</p>
-                            </div>
-                            <div class="cor-alerta" id="card_${item.id}"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="cards" id="cardkpis">
-                    <div class="card-kpi">
-                        <div class="title-kpi">
-                            <h2>Visualizações</h2>
-                        </div>
-                        <div class="desc-kpi">
-                            <div class="temperatura">
-                                <p id="temp_kpi_${item.id}">12</p>
-                            </div>
-                            <div class="cor-alerta" id="card_${item.id}"></div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="dash">
-                <canvas id="bar" width="300px" height="300px"></canvas>
+           
 
+            <div class="dash">
+                <canvas id="bar"></canvas>
                 <div id="caixa_cap">
                     <div id="capitulos"></div>
                 </div>
-                
+
             </div>
+
         </div>
-        </div>
-        
-        </div>
-        <div class="faixa">
+
+        <div class="faixa"></div>
+
     </section>
 </body>
+
 <footer>
     <span>Elaborado por João Ricardo Jortieke Junior, 2025.</span>
 </footer>
@@ -132,97 +115,179 @@
 </html>
 
 <script>
-    b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
-    var menu = false;
+/*  INICIALIZAÇÃO  */
 
-    const ctx = document.getElementById('bar');
+b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
+let chartCapitulos = null;
+const nomesMeses = [
+    "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+    "Jul", "Ago", "Set", "Out", "Nov", "Dez"
+];
 
-    new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: ['Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-        datasets: [{
-            label: 'Capítulos Lidos',
-            data: [3, 5, 12, 4, 2, 3],
-            borderColor: '#10491B',
-            backgroundColor: '#C3D1C6',
-            borderWidth: 1
-        }]
-    },
-    options: {
-        plugins: {
-            title: {
-                display: true,
-                text: 'Número de Capítulos Lidos',
-                color: 'black'
-            },
-            legend: {
-                labels: {
-                    color: 'black'
-                }
-            }
-        },
-        scales: { 
-            x: {
-                ticks: {
-                    color: 'black'
-                },
-                grid: {
-                    color: 'black'
-                }
-            },
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    color: 'black'
-                },
-                grid: {
-                    color: 'black'
-                }
-            }
-        }
+window.onload = () => {
+    montarCapitulos();
+    preencherCapitulosMarcados();
+    atualizarKpiCapitulos();
+    carregarKpis();
+};
+
+
+/*  SALVAR CAPÍTULOS LIDOS (POST) */
+
+function salvarCapitulos() {
+    const idUsuario = sessionStorage.ID_USUARIO;
+    const lidos = [];
+
+    for (let i = 1; i <= 110; i++) {
+        let c = document.getElementById("cap" + i);
+        if (c && c.checked) lidos.push(i);
     }
-});
 
+    fetch("/leitura/salvar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            idUsuario: idUsuario,
+            capitulos: lidos
+        })
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Erro ao salvar capítulos");
+        return res.json();
+    })
+    .then(() => {
+        alert("Capítulos salvos com sucesso!");
+        atualizarKpiCapitulos();
+    })
+    .catch(err => console.error(err));
+}
 
-/* Pegar KPIs */
+/*  CARREGAR CAPÍTULOS LIDOS */
 
-    function exibirAquarios() {
-        JSON.parse(sessionStorage.AQUARIOS).forEach(item => {
-            document.getElementById("cardAquarios").innerHTML += `
-                    <div class="card-aquario">
-                        <div class="title-aquario">
-                            <h1>${item.descricao}</h1>
-                        </div>
-                        <div class="desc-aquario">
-                        <div class="temperatura">
-                            <p id="temp_aquario_${item.id}">-°C</p>
-                        </div>
-                        <div class="cor-alerta" id="card_${item.id}"></div>
-                    </div>
-                    </div>
-                    `
+function preencherCapitulosMarcados() {
+    const idUsuario = sessionStorage.ID_USUARIO;
+
+    fetch(`/leitura/listar/${idUsuario}`)   /* <----- corrigido */
+        .then(res => res.json())
+        .then(lista => {
+            lista.forEach(reg => {
+                const el = document.getElementById("cap" + reg.capitulo);
+                if (el) el.checked = true;
+            });
         });
-    }
-    
-    function exibirMenu(){
-        if (menu == false) {
-            menu = true;
-            menu_lateral.style.display = "flex";
-        } else { 
-            menu = false;
-            menu_lateral.style.display = "none";
+}
+
+/*  KPI + GRÁFICO  */
+
+function atualizarKpiCapitulos() {
+    const idUsuario = sessionStorage.ID_USUARIO;
+
+    fetch(`/leitura/listar/${idUsuario}`, { cache: "no-store" })
+    .then(r => r.json())
+    .then(lista => {
+        document.getElementById("kpi_capitulos").innerText = `${lista.length}/110`;
+
+        const dadosProcessados = processarDadosPorMes(lista);
+        atualizarGraficoBarra(dadosProcessados);
+    })
+    .catch(err => console.error("Erro ao atualizar:", err));
+}
+
+function processarDadosPorMes(dadosBrutos) {
+    const contagemMensal = {};
+
+    dadosBrutos.forEach(reg => {
+        if (!reg.dtLeitura) return;  // Evita erros caso a data não exista
+
+        const data = new Date(reg.dtLeitura);
+        const mes = data.getMonth();    // 0–11
+        const ano = data.getFullYear(); // 2025, etc.
+
+        const nomeMes = nomesMeses[mes];
+        const chave = `${nomeMes}/${ano}`; // Ex: Fev/2025
+
+        contagemMensal[chave] = (contagemMensal[chave] || 0) + 1;
+    });
+
+    // Ordenação cronológica real (e não ordem alfabética)
+    const labelsOrdenados = Object.keys(contagemMensal).sort((a, b) => {
+        const [mA, aA] = a.split('/');
+        const [mB, aB] = b.split('/');
+
+        const dataA = new Date(aA, nomesMeses.indexOf(mA), 1);
+        const dataB = new Date(aB, nomesMeses.indexOf(mB), 1);
+
+        return dataA - dataB;
+    });
+
+    const dadosOrdenados = labelsOrdenados.map(k => contagemMensal[k]);
+
+    return {
+        labels: labelsOrdenados,
+        data: dadosOrdenados
+    };
+}
+
+
+
+function atualizarGraficoBarra(dados) {
+    const ctx = document.getElementById('bar').getContext('2d');
+
+    if (chartCapitulos) chartCapitulos.destroy();
+
+    const colors = ['#1e40af', '#10b981', '#f59e0b', '#3b82f6', '#ef4444'];
+
+    chartCapitulos = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: dados.labels,
+            datasets: [{
+                label: "Capítulos lidos",
+                data: dados.data,
+                backgroundColor: dados.labels.map((_, i) => colors[i % colors.length]),
+                borderColor: "#1f2937",
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: "Capítulos Lidos por Mês",
+                    font: { size: 16 }
+                }
+            },
+            scales: {
+                x: { title: { display: true, text: "Mês/Ano" }},
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: "Quantidade" },
+                    ticks: { stepSize: 1 }
+                }
+            }
         }
-        
-    }
+    });
+}
 
-    function sair(){
-        sessionStorage.clear();
-        window.location.href = "login.html";
-    }
-    
 
-    function montarCapitulos() {
+
+function carregarKpis() {
+    var idUsuario = sessionStorage.ID_USUARIO;
+
+    fetch(`/forum/kpis/${idUsuario}`)
+    .then(r => r.json())
+    .then(resposta => {
+        document.getElementById("kpi_postagens").innerHTML = resposta.postagens;
+        document.getElementById("kpi_curtidas_forum").innerHTML = resposta.curtidas;
+        document.getElementById("kpi_visualizacoes_forum").innerHTML = resposta.visualizacoes;
+    })
+    .catch(e => console.log(e));
+}
+
+     function montarCapitulos() {
     var blocos = [
         ["Parte I", 1, 20],
         ["Parte II", 21, 40],
@@ -256,7 +321,7 @@
     document.getElementById("capitulos").innerHTML = html;
 }
 
-function marcarBloco(inicio, fim) {
+    function marcarBloco(inicio, fim) {
     for (var c = inicio; c <= fim; c++) {
         var checkbox = document.getElementById("cap" + c);
         if (checkbox) {
@@ -265,254 +330,23 @@ function marcarBloco(inicio, fim) {
     }
 }
 
-function salvarCapitulos() {
-    var lidos = [];
+    var menu = false;
 
-    for (var i = 1; i <= 110; i++) {
-        var c = document.getElementById("cap" + i);
-        if (c && c.checked === true) {
-            lidos.push(i);
+    function exibirMenu(){
+        if (menu == false) {
+            menu = true;
+            menu_lateral.style.display = "flex";
+        } else { 
+            menu = false;
+            menu_lateral.style.display = "none";
         }
     }
 
-    alert("Capítulos salvos: " + lidos.join(", "));
-}
-
-
-montarCapitulos();
-/*------------------------------------------------------------------------------------*/    
-    
-    let proximaAtualizacao;
-
-    window.onload = exibirAquariosDoUsuario();
-
-    function exibirAquariosDoUsuario() {
-        var aquarios = JSON.parse(sessionStorage.AQUARIOS);
-        aquarios.forEach(item => {
-            document.getElementById("btnAquario").innerHTML += `
-            <button class="btn-chart" onclick="exibirAquario(${item.id})" id="btnAquario${item.id}">${item.descricao}</button>
-            `
-
-            document.getElementById("graficos").innerHTML += `
-                <div id="grafico${item.id}" class="display-none">
-                    <h3 class="tituloGraficos">
-                        <span id="tituloAquario${item.id}">${item.descricao}</span>
-                    </h3>
-                    <div class="graph">
-                        <canvas id="myChartCanvas${item.id}"></canvas>
-                    </div>
-                    <div class="label-captura">
-                        <p id="avisoCaptura${item.id}" style="color: white"></p>
-                    </div>
-                </div>
-            `
-
-            obterDadosGrafico(item.id)
-        });
-
-        if (aquarios.length > 0) {
-            exibirAquario(aquarios[0].id)
-        }
-    }
-
-    function alterarTitulo(idAquario) {
-        var tituloAquario = document.getElementById(`tituloAquario${idAquario}`)
-        var descricao = JSON.parse(sessionStorage.AQUARIOS).find(item => item.id == idAquario).descricao;
-        tituloAquario.innerHTML = "Últimas medidas de Temperatura e Umidade do <span style='color: #e6005a'>" + descricao + "</span>"
-    }
-
-    function exibirAquario(idAquario) {
-        let todosOsGraficos = JSON.parse(sessionStorage.AQUARIOS);
-
-        for (i = 0; i < todosOsGraficos.length; i++) {
-            // exibindo - ou não - o gráfico
-            if (todosOsGraficos[i].id != idAquario) {
-                let elementoAtual = document.getElementById(`grafico${todosOsGraficos[i].id}`)
-                if (elementoAtual.classList.contains("display-block")) {
-                    elementoAtual.classList.remove("display-block")
-                }
-                elementoAtual.classList.add("display-none")
-
-                // alterando estilo do botão
-                let btnAtual = document.getElementById(`btnAquario${todosOsGraficos[i].id}`)
-                if (btnAtual.classList.contains("btn-pink")) {
-                    btnAtual.classList.remove("btn-pink")
-                }
-                btnAtual.classList.add("btn-white")
-            }
-        }
-
-        // exibindo - ou não - o gráfico
-        let graficoExibir = document.getElementById(`grafico${idAquario}`)
-        graficoExibir.classList.remove("display-none")
-        graficoExibir.classList.add("display-block")
-
-        // alterando estilo do botão
-        let btnExibir = document.getElementById(`btnAquario${idAquario}`)
-        btnExibir.classList.remove("btn-white")
-        btnExibir.classList.add("btn-pink")
-    }
-
-    // O gráfico é construído com três funções:
-    // 1. obterDadosGrafico -> Traz dados do Banco de Dados para montar o gráfico da primeira vez
-    // 2. plotarGrafico -> Monta o gráfico com os dados trazidos e exibe em tela
-    // 3. atualizarGrafico -> Atualiza o gráfico, trazendo novamente dados do Banco
-
-    // Esta função *obterDadosGrafico* busca os últimos dados inseridos em tabela de medidas.
-    // para, quando carregar o gráfico da primeira vez, já trazer com vários dados.
-    // A função *obterDadosGrafico* também invoca a função *plotarGrafico*
-
-    //     Se quiser alterar a busca, ajuste as regras de negócio em src/controllers
-    //     Para ajustar o "select", ajuste o comando sql em src/models
-    function obterDadosGrafico(idAquario) {
-
-        alterarTitulo(idAquario)
-
-        if (proximaAtualizacao != undefined) {
-            clearTimeout(proximaAtualizacao);
-        }
-
-        fetch(`/medidas/ultimas/${idAquario}`, { cache: 'no-store' }).then(function (response) {
-            if (response.ok) {
-                response.json().then(function (resposta) {
-                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
-                    resposta.reverse();
-
-                    plotarGrafico(resposta, idAquario);
-
-                });
-            } else {
-                console.error('Nenhum dado encontrado ou erro na API');
-            }
-        })
-            .catch(function (error) {
-                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
-            });
-    }
-
-    // Esta função *plotarGrafico* usa os dados capturados na função anterior para criar o gráfico
-    // Configura o gráfico (cores, tipo, etc), materializa-o na página e, 
-    // A função *plotarGrafico* também invoca a função *atualizarGrafico*
-    function plotarGrafico(resposta, idAquario) {
-
-        console.log('iniciando plotagem do gráfico...');
-
-        // Criando estrutura para plotar gráfico - labels
-        let labels = [];
-
-        // Criando estrutura para plotar gráfico - dados
-        let dados = {
-            labels: labels,
-            datasets: [{
-                label: 'Umidade',
-                data: [],
-                fill: false,
-                borderColor: 'rgb(75, 192, 192)',
-                tension: 0.1
-            },
-            {
-                label: 'Temperatura',
-                data: [],
-                fill: false,
-                borderColor: 'rgb(199, 52, 52)',
-                tension: 0.1
-            }]
-        };
-
-        console.log('----------------------------------------------')
-        console.log('Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarGrafico":')
-        console.log(resposta)
-
-        // Inserindo valores recebidos em estrutura para plotar o gráfico
-        for (i = 0; i < resposta.length; i++) {
-            var registro = resposta[i];
-            labels.push(registro.momento_grafico);
-            dados.datasets[0].data.push(registro.umidade);
-            dados.datasets[1].data.push(registro.temperatura);
-        }
-
-        console.log('----------------------------------------------')
-        console.log('O gráfico será plotado com os respectivos valores:')
-        console.log('Labels:')
-        console.log(labels)
-        console.log('Dados:')
-        console.log(dados.datasets)
-        console.log('----------------------------------------------')
-
-        // Criando estrutura para plotar gráfico - config
-        const config = {
-            type: 'line',
-            data: dados,
-        };
-
-        // Adicionando gráfico criado em div na tela
-        let myChart = new Chart(
-            document.getElementById(`myChartCanvas${idAquario}`),
-            config
-        );
-
-        setTimeout(() => atualizarGrafico(idAquario, dados, myChart), 2000);
+    function sair(){
+        sessionStorage.clear();
+        window.location.href = "login.html";
     }
 
 
-    // Esta função *atualizarGrafico* atualiza o gráfico que foi renderizado na página,
-    // buscando a última medida inserida em tabela contendo as capturas, 
 
-    //     Se quiser alterar a busca, ajuste as regras de negócio em src/controllers
-    //     Para ajustar o "select", ajuste o comando sql em src/models
-    function atualizarGrafico(idAquario, dados, myChart) {
-
-
-
-        fetch(`/medidas/tempo-real/${idAquario}`, { cache: 'no-store' }).then(function (response) {
-            if (response.ok) {
-                response.json().then(function (novoRegistro) {
-
-                    obterdados(idAquario);
-                    // alertar(novoRegistro, idAquario);
-                    console.log(`Dados recebidos: ${JSON.stringify(novoRegistro)}`);
-                    console.log(`Dados atuais do gráfico:`);
-                    console.log(dados);
-
-                    let avisoCaptura = document.getElementById(`avisoCaptura${idAquario}`)
-                    avisoCaptura.innerHTML = ""
-
-
-                    if (novoRegistro[0].momento_grafico == dados.labels[dados.labels.length - 1]) {
-                        console.log("---------------------------------------------------------------")
-                        console.log("Como não há dados novos para captura, o gráfico não atualizará.")
-                        avisoCaptura.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i> Foi trazido o dado mais atual capturado pelo sensor. <br> Como não há dados novos a exibir, o gráfico não atualizará."
-                        console.log("Horário do novo dado capturado:")
-                        console.log(novoRegistro[0].momento_grafico)
-                        console.log("Horário do último dado capturado:")
-                        console.log(dados.labels[dados.labels.length - 1])
-                        console.log("---------------------------------------------------------------")
-                    } else {
-                        // tirando e colocando valores no gráfico
-                        dados.labels.shift(); // apagar o primeiro
-                        dados.labels.push(novoRegistro[0].momento_grafico); // incluir um novo momento
-
-                        dados.datasets[0].data.shift();  // apagar o primeiro de umidade
-                        dados.datasets[0].data.push(novoRegistro[0].umidade); // incluir uma nova medida de umidade
-
-                        dados.datasets[1].data.shift();  // apagar o primeiro de temperatura
-                        dados.datasets[1].data.push(novoRegistro[0].temperatura); // incluir uma nova medida de temperatura
-
-                        myChart.update();
-                    }
-
-                    // Altere aqui o valor em ms se quiser que o gráfico atualize mais rápido ou mais devagar
-                    proximaAtualizacao = setTimeout(() => atualizarGrafico(idAquario, dados, myChart), 2000);
-                });
-            } else {
-                console.error('Nenhum dado encontrado ou erro na API');
-                // Altere aqui o valor em ms se quiser que o gráfico atualize mais rápido ou mais devagar
-                proximaAtualizacao = setTimeout(() => atualizarGrafico(idAquario, dados, myChart), 2000);
-            }
-        })
-            .catch(function (error) {
-                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
-            });
-
-    }
 </script>

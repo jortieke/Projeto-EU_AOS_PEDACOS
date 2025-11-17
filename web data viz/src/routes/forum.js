@@ -1,30 +1,11 @@
 var express = require("express");
 var router = express.Router();
-
 var forumController = require("../controllers/forumController");
 
-router.get("/listar", function (req, res) {
-    forumController.listar(req, res);
-});
-
-router.get("/listar/:idUsuario", function (req, res) {
-    forumController.listarPorUsuario(req, res);
-});
-
-router.get("/pesquisar/:descricao", function (req, res) {
-    forumController.pesquisarDescricao(req, res);
-});
-
-router.post("/publicar/:idUsuario", function (req, res) {
-    forumController.publicar(req, res);
-});
-
-router.put("/editar/:idforum", function (req, res) {
-    forumController.editar(req, res);
-});
-
-router.delete("/deletar/:idforum", function (req, res) {
-    forumController.deletar(req, res);
-});
+router.get("/kpis/:idUsuario", forumController.kpisForum);
+router.post("/criar", forumController.criar);
+router.post("/curtir", forumController.curtir);
+router.post("/visualizar", forumController.visualizar);
+router.get("/listar", forumController.listar);
 
 module.exports = router;

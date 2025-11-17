@@ -1,99 +1,82 @@
 var database = require("../database/config");
 
+function contarPostagens(idUsuario) {
+    var instrucao = `
+        SELECT COUNT(*) AS total
+        FROM forum
+        WHERE fkUsuario = ${idUsuario};
+    `;
+    return database.executar(instrucao);
+}
+
+
+function contarCurtidasRecebidas(idUsuario) {
+    var instrucao = `
+        SELECT COUNT(*) AS total
+        FROM curtida 
+        JOIN forum ON curtida.fkForum = forum.idForum
+        WHERE forum.fkUsuario = ${idUsuario};
+    `;
+    return database.executar(instrucao);
+}
+
+function contarVisualizacoesRecebidas(idUsuario) {
+    var instrucao = `
+        SELECT COUNT(*) AS total
+        FROM visualizacao 
+        JOIN forum ON visualizacao.fkForum = forum.idForum
+        WHERE forum.fkUsuario = ${idUsuario};
+    `;
+    return database.executar(instrucao);
+}
+
+function criarPostagem(titulo, descricao, idUsuario) {
+    var instrucao = `
+        INSERT INTO forum (titulo, descricao, fkUsuario)
+        VALUES ('${titulo}', '${descricao}', ${idUsuario});
+    `;
+    return database.executar(instrucao);
+}
+
+
+function registrarCurtida(idUsuario, idForum) {
+    var instrucao = `
+        INSERT INTO curtida (fkUsuario, fkForum)
+        VALUES (${idUsuario}, ${idForum});
+    `;
+    return database.executar(instrucao);
+}
+
+
+function registrarVisualizacao(idUsuario, idForum) {
+    var instrucao = `
+        INSERT INTO visualizacao (idVisualizacao, fkUsuario, fkForum)
+        VALUES (FLOOR(RAND() * 999999), ${idUsuario}, ${idForum});
+    `;
+    return database.executar(instrucao);
+}
+
 function listar() {
-    console.log("ACESSEI O Forum  MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listar()");
-    var instrucaoSql = `
-        SELECT 
-            a.id AS idForum,
-            a.titulo,
-            a.descricao,
-            a.fk_usuario,
-            u.id AS idUsuario,
-            u.nome,
-            u.email,
-            u.senha
-        FROM forum a
-            INNER JOIN usuario u
-                ON a.fk_usuario = u.id;
+    var instrucao = `
+            SELECT f.idForum, 
+                f.titulo, 
+                f.descricao, 
+                f.dtPostagem, 
+                u.nome AS autor
+                    FROM forum f
+                        JOIN usuario u 
+                            ON f.fkUsuario = u.idUsuario
+                    ORDER BY f.dtPostagem DESC;
     `;
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
-    return database.executar(instrucaoSql);
-}
-
-function pesquisarDescricao(texto) {
-    console.log("ACESSEI O Forum MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function pesquisarDescricao()");
-    var instrucaoSql = `
-        SELECT 
-            a.id AS idForum,
-            a.titulo,
-            a.descricao,
-            a.fk_usuario,
-            u.id AS idUsuario,
-            u.nome,
-            u.email,
-            u.senha
-        FROM forum a
-            INNER JOIN usuario u
-                ON a.fk_usuario = u.id
-        WHERE a.descricao LIKE '${texto}';
-    `;
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
-    return database.executar(instrucaoSql);
-}
-
-function listarPorUsuario(idUsuario) {
-    console.log("ACESSEI O Forum MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listarPorUsuario()");
-    var instrucaoSql = `
-        SELECT 
-            a.idForum AS idForum,
-            a.titulo,
-            a.descricao,
-            a.fk_usuario,
-            u.idUsuario AS idUsuario,
-            u.nome,
-            u.email,
-            u.senha
-        FROM forum a
-            INNER JOIN usuario u
-                ON a.fk_usuario = u.idUsuario
-        WHERE u.idUsuario = ${idUsuario};
-    `;
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
-    return database.executar(instrucaoSql);
-}
-
-function publicar(titulo, descricao, idUsuario) {
-    console.log("ACESSEI O Forum MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function publicar(): ", titulo, descricao, idUsuario);
-    var instrucaoSql = `
-        INSERT INTO Forum (titulo, descricao, fk_usuario) VALUES ('${titulo}', '${descricao}', '${idUsuario}');
-    `;
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
-    return database.executar(instrucaoSql);
-}
-
-function editar(novaDescricao, idForum) {
-    console.log("ACESSEI O Forum MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function editar(): ", novaDescricao, idForum);
-    var instrucaoSql = `
-        UPDATE Forum SET descricao = '${novaDescricao}' WHERE id = ${idForum};
-    `;
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
-    return database.executar(instrucaoSql);
-}
-
-function deletar(idForum) {
-    console.log("ACESSEI O Forum MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function deletar():", idForum);
-    var instrucaoSql = `
-        DELETE FROM forum WHERE id = ${idForum};
-    `;
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
-    return database.executar(instrucaoSql);
+    return database.executar(instrucao);
 }
 
 module.exports = {
-    listar,
-    listarPorUsuario,
-    pesquisarDescricao,
-    publicar,
-    editar,
-    deletar
-}
+    contarPostagens,
+    contarCurtidasRecebidas,
+    contarVisualizacoesRecebidas,
+    criarPostagem,
+    registrarCurtida,
+    registrarVisualizacao,
+    listar
+};

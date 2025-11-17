@@ -1,136 +1,62 @@
 var forumModel = require("../models/forumModel");
 
+function kpisForum(req, res) {
+    var idUsuario = req.params.idUsuario;
+
+    Promise.all([
+        forumModel.contarPostagens(idUsuario),
+        forumModel.contarCurtidasRecebidas(idUsuario),
+        forumModel.contarVisualizacoesRecebidas(idUsuario)
+    ])
+        .then(resultado => {
+            res.json({
+                postagens: resultado[0][0].total,
+                curtidas: resultado[1][0].total,
+                visualizacoes: resultado[2][0].total
+            });
+        })
+        .catch(erro => {
+            res.status(500).json(erro.sqlMessage);
+        });
+}
+
+function criar(req, res) {
+    var { titulo, descricao, idUsuario } = req.body;
+
+    forumModel.criarPostagem(titulo, descricao, idUsuario)
+        .then(r => res.json("Post criado"))
+        .catch(e => res.status(500).json(e.sqlMessage));
+}
+
+function curtir(req, res) {
+    var { idUsuario, idForum } = req.body;
+
+    forumModel.registrarCurtida(idUsuario, idForum)
+        .then(r => res.json("Curtida registrada"))
+        .catch(e => res.status(500).json(e.sqlMessage));
+}
+
+function visualizar(req, res) {
+    var { idUsuario, idForum } = req.body;
+
+    forumModel.registrarVisualizacao(idUsuario, idForum)
+        .then(r => res.json("Visualização registrada"))
+        .catch(e => res.status(500).json(e.sqlMessage));
+}
+
 function listar(req, res) {
-    forumModel.listar().then(function (resultado) {
-        if (resultado.length > 0) {
-            res.status(200).json(resultado);
-        } else {
-            res.status(204).send("Nenhum resultado encontrado!")
-        }
-    }).catch(function (erro) {
-        console.log(erro);
-        console.log("Houve um erro ao buscar os forums: ", erro.sqlMessage);
-        res.status(500).json(erro.sqlMessage);
-    });
-}
-
-function listarPorUsuario(req, res) {
-    var idUsuario = req.params.idUsuario;
-
-    forumModel.listarPorUsuario(idUsuario)
-        .then(
-            function (resultado) {
-                if (resultado.length > 0) {
-                    res.status(200).json(resultado);
-                } else {
-                    res.status(204).send("Nenhum resultado encontrado!");
-                }
-            }
-        )
-        .catch(
-            function (erro) {
-                console.log(erro);
-                console.log(
-                    "Houve um erro ao buscar os forums: ",
-                    erro.sqlMessage
-                );
-                res.status(500).json(erro.sqlMessage);
-            }
-        );
-}
-
-function pesquisarDescricao(req, res) {
-    var descricao = req.params.descricao;
-
-    forumModel.pesquisarDescricao(descricao)
-        .then(
-            function (resultado) {
-                if (resultado.length > 0) {
-                    res.status(200).json(resultado);
-                } else {
-                    res.status(204).send("Nenhum resultado encontrado!");
-                }
-            }
-        ).catch(
-            function (erro) {
-                console.log(erro);
-                console.log("Houve um erro ao buscar os forums: ", erro.sqlMessage);
-                res.status(500).json(erro.sqlMessage);
-            }
-        );
-}
-
-function publicar(req, res) {
-    var titulo = req.body.titulo;
-    var descricao = req.body.descricao;
-    var idUsuario = req.params.idUsuario;
-
-    if (titulo == undefined) {
-        res.status(400).send("O título está indefinido!");
-    } else if (descricao == undefined) {
-        res.status(400).send("A descrição está indefinido!");
-    } else if (idUsuario == undefined) {
-        res.status(403).send("O id do usuário está indefinido!");
-    } else {
-        forumModel.publicar(titulo, descricao, idUsuario)
-            .then(
-                function (resultado) {
-                    res.json(resultado);
-                }
-            )
-            .catch(
-                function (erro) {
-                    console.log(erro);
-                    console.log("Houve um erro ao realizar o post: ", erro.sqlMessage);
-                    res.status(500).json(erro.sqlMessage);
-                }
-            );
-    }
-}
-
-function editar(req, res) {
-    var novaDescricao = req.body.descricao;
-    var idforum = req.params.idforum;
-
-    forumModel.editar(novaDescricao, idforum)
-        .then(
-            function (resultado) {
-                res.json(resultado);
-            }
-        )
-        .catch(
-            function (erro) {
-                console.log(erro);
-                console.log("Houve um erro ao realizar o post: ", erro.sqlMessage);
-                res.status(500).json(erro.sqlMessage);
-            }
-        );
-
-}
-
-function deletar(req, res) {
-    var idforum = req.params.idforum;
-
-    forumModel.deletar(idforum)
-        .then(
-            function (resultado) {
-                res.json(resultado);
-            }
-        )
-        .catch(
-            function (erro) {
-                console.log(erro);
-                console.log("Houve um erro ao deletar o post: ", erro.sqlMessage);
-                res.status(500).json(erro.sqlMessage);
-            }
-        );
+    forumModel.listar()
+        .then(r => {
+            console.log(r); 
+            res.json(r);
+        })
+        .catch(e => res.status(500).json(e.sqlMessage));
 }
 
 module.exports = {
-    listar,
-    listarPorUsuario,
-    pesquisarDescricao,
-    publicar,
-    editar,
-    deletar
-}
+    kpisForum,
+    criar,
+    curtir,
+    visualizar,
+    listar
+};

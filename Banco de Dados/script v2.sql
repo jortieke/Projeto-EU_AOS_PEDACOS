@@ -11,6 +11,9 @@ CREATE TABLE usuario(
     dtCadastro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+INSERT INTO usuario VALUES
+	(DEFAULT, 'João Ricardo', 'ricardojrjj@gmail.com', '45290856862', '123456', NOW()),
+    (DEFAULT, 'Anderson', 'anderson@gmail.com', '11111111111', '123456', NOW());
 
 CREATE TABLE livro(
 	idLivro INT PRIMARY KEY AUTO_INCREMENT,
@@ -148,7 +151,7 @@ CREATE TABLE forum(
 	idForum INT PRIMARY KEY AUTO_INCREMENT,
     titulo VARCHAR(100) NOT NULL,
     descricao TEXT NOT NULL,
-    fkUsuario INT UNIQUE,
+    fkUsuario INT,
 		CONSTRAINT fkForumUsuario
 			FOREIGN KEY (fkUsuario)
 				REFERENCES usuario(idUsuario),
@@ -160,24 +163,71 @@ CREATE TABLE leitura(
     fkCapitulo INT,
 		CONSTRAINT pkLeitura
 			PRIMARY KEY (fkUsuario, fkCapitulo),
-	dtLeitura DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+	dtLeitura DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		CONSTRAINT fkLeituraUsuario
+			FOREIGN KEY (fkUsuario)
+				REFERENCES usuario(idUsuario),
+		CONSTRAINT fkLeituraCapitulo
+			FOREIGN KEY (fkCapitulo)
+				REFERENCES capitulo(idCapitulo)
 );
+
+INSERT INTO leitura VALUES
+	(2, 110, '2025-08-11 20:10:09'),
+	(2, 109, '2025-08-14 20:10:09'),
+	(2, 108, '2025-08-17 20:10:09'),
+	(2, 107, '2025-08-20 20:10:09'),
+	(2, 106, '2025-08-23 20:10:09'),
+	(2, 105, '2025-08-26 20:10:09'),
+	(2, 104, '2025-08-29 20:10:09'),
+	(2, 103, '2025-09-01 20:10:09'),
+	(2, 102, '2025-09-04 20:10:09'),
+	(2, 101, '2025-09-07 20:10:09'),
+	(2, 100, '2025-09-10 20:10:09'),
+	(2, 99, '2025-09-13 20:10:09'),
+	(2, 98, '2025-09-16 20:10:09'),
+	(2, 97, '2025-09-19 20:10:09'),
+	(2, 96, '2025-09-22 20:10:09'),
+	(2, 95, '2025-09-25 20:10:09'),
+	(2, 94, '2025-09-28 20:10:09'),
+	(2, 93, '2025-10-01 20:10:09'),
+	(2, 92, '2025-10-04 20:10:09'),
+	(2, 91, '2025-10-07 20:10:09'),
+	(2, 90, '2025-10-10 20:10:09'),
+	(2, 89, '2025-10-13 20:10:09'),
+	(2, 88, '2025-10-16 20:10:09'),
+	(2, 87, '2025-10-19 20:10:09'),
+	(2, 86, '2025-10-22 20:10:09'),
+	(2, 85, '2025-10-25 20:10:09'),
+	(2, 84, '2025-10-28 20:10:09');
 
 CREATE TABLE curtida(
 	fkUsuario INT,
-    fkCapitulo INT,
+    fkForum INT,
 		CONSTRAINT pkCurtida
-			PRIMARY KEY (fkUsuario, fkCapitulo),
-	dtCurtida DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+			PRIMARY KEY (fkUsuario, fkForum),
+	dtCurtida DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		CONSTRAINT fkCurtidaUsuario
+			FOREIGN KEY (fkUsuario)
+				REFERENCES usuario(idUsuario),
+		CONSTRAINT fkCurtidaForum
+			FOREIGN KEY (fkForum)
+				REFERENCES forum(idForum)
 );
 
 CREATE TABLE visualizacao(
-	idVisualizacao INT,
+	idVisualizacao INT AUTO_INCREMENT,
     fkUsuario INT,
-    fkCapitulo INT,
+    fkForum INT,
 		CONSTRAINT pkVisualizacao
-			PRIMARY KEY (idVisualizacao, fkUsuario, fkCapitulo),
-	dtVisualizacao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+			PRIMARY KEY (idVisualizacao, fkUsuario, fkForum),
+	dtVisualizacao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		CONSTRAINT fkVisualizacaoUsuario
+			FOREIGN KEY (fkUsuario)
+				REFERENCES usuario(idUsuario),
+		CONSTRAINT fkVisualizacaoForum
+			FOREIGN KEY (fkForum)
+				REFERENCES forum(idForum)
 );
 
 CREATE TABLE avaliacao(
@@ -186,6 +236,8 @@ CREATE TABLE avaliacao(
 		CONSTRAINT fkAvaliacaoUsuario
 			FOREIGN KEY (fkUsuario)
 				REFERENCES usuario(idUsuario),
+		CONSTRAINT un_usuario_livro 
+			UNIQUE (fkUsuario, fkLivro),
 	fkLivro INT,
 		CONSTRAINT fkAvaliacaoLivro
 			FOREIGN KEY (fkLivro)
@@ -194,4 +246,17 @@ CREATE TABLE avaliacao(
     dtAvaliacao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-
+SELECT capitulo.titulo AS Capítulos,
+	livro.titulo AS Livro 
+	FROM capitulo
+		JOIN livro
+			ON idLivro = fkLivro;
+            
+SELECT f.idForum, 
+               f.titulo, 
+               f.descricao, 
+               f.dtPostagem, 
+               u.nome AS autor
+        FROM forum f
+        JOIN usuario u ON f.fkUsuario = u.idUsuario
+        ORDER BY f.dtPostagem DESC;

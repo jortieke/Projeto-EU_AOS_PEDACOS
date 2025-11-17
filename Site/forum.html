@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <title>Fórum</title>
+
+    
+</head>
+
+<body>
+    <header>
+        <div class="navegar">
+            <div>
+                <a href="index.html"><img src="imgs/logo2.png" alt=""></a>
+            </div>
+            <ul class="menu">
+                <li><a href="sobre-mim.html">Sobre Mim</a></li>
+                <li><a href="forum.html">Fórum</a></li>
+                <li><a href="sobre-o-livro.html">Sobre o Livro</a></li>
+                <li><a href="cadastro.html">Cadastro</a></li>
+            </ul>
+        </div>
+        <div class="acessar">
+            <span id="b_usuario">usuário</span>
+        </div>
+        <div>
+            <img src="imgs/user.png" alt="" style="width: 40px; height: 40px; padding-top: 5px; padding-left: 40px;">
+        </div>
+        <div>
+            <img onclick="exibirMenu()" src="imgs/sandwich.png" alt=""
+                 style="width: 40px; height: 40px; padding-top: 5px; padding-left: 30px;">
+        </div>
+        <div class="menu_lateral" id="menu_lateral">
+            <ul class="menu">
+                <li><a href="sobre-mim.html">Configurações</a></li>
+                <li><a href="painel.html">Verificar Painel</a></li>
+                <li onclick="sair()"><a href="index.html">Sair</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <section>
+        <div class="faixa"></div>
+
+        <div class="container-escuro" style="flex-direction: column; align-items:center; padding-top:30px;">
+
+            <div class="txt3" style="width: 60%; padding: 20px; margin-bottom: 30px; align-self: center;">
+                <h2 style="text-align:center;">Criar novo tópico</h2>
+
+                <span>Título</span> <br>
+                <input id="titulo_forum" style="width: 80%; margin-bottom: 10px;"> <br>
+
+                <span>Descrição</span> <br>
+                <textarea id="descricao_forum" style="width: 80%; height: 100px;"></textarea> <br>
+
+                <button onclick="criarPostagem()" 
+                        style="margin-top:15px; background:#702424; color:white; padding:8px 18px; border:none;">
+                    Publicar
+                </button>
+
+                <h2 style="text-align:center;">Tópicos do Fórum</h2>
+
+                <div id="lista_forum"></div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <footer>
+            <span>© 2025 • Eu, Aos Pedaços</span>
+    </footer>
+
+</body>
+
+
+</html>
+
+
+<script>
+b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
+
+window.onload = () => {
+    carregarPosts();
+};
+
+
+function carregarPosts() {
+    fetch("/forum/listar")
+        .then(res => res.json())
+        .then(lista => {
+            const area = document.getElementById("lista_forum");
+            area.innerHTML = "";
+
+            lista.forEach(post => {
+                area.innerHTML += montarPostHTML(post);
+                registrarVisualizacao(post.idForum);
+                verificarCurtida(post.idForum);
+                atualizarCurtidas(post.idForum);
+                atualizarVisualizacoes(post.idForum);
+            });
+        });
+}
+
+
+function montarPostHTML(post) {
+    const dataFormatada = new Date(post.dtPostagem).toLocaleString("pt-BR");
+
+    return `
+        <div class="txt2" style="margin-bottom: 20px; padding: 15px;">
+            <h3>${post.titulo}</h3>
+            <p>${post.descricao}</p>
+            <small>Postado em: ${dataFormatada}</small> <br>
+            <small>Postado por: ${post.autor}</small>
+
+            <div style="margin-top: 10px;">
+                <button onclick="curtir(${post.idForum})" id="btnCurtir_${post.idForum}">
+                    Curtir
+                </button>
+
+                <span id="curtidas_${post.idForum}">0</span> curtidas |
+                <span id="views_${post.idForum}">0</span> visualizações
+            </div>
+        </div>
+    `;
+}
+
+function criarPostagem() {
+    const idUsuario = sessionStorage.ID_USUARIO;
+    const titulo = document.getElementById("titulo_forum").value;
+    const descricao = document.getElementById("descricao_forum").value;
+
+    fetch("/forum/criar", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ titulo, descricao, idUsuario })
+    })
+    .then(res => {
+        if (!res.ok) throw "Erro ao criar post";
+        return res.json();
+    })
+    .then(() => {
+        carregarPosts();
+        carregarKpis();
+    });
+}
+
+
+function curtir(idForum) {
+    const idUsuario = sessionStorage.ID_USUARIO;
+
+    fetch(`/curtida/verificar/${idUsuario}/${idForum}`)
+    .then(r => r.json())
+    .then(res => {
+        if (res.curtido) {
+            return fetch("/curtida/remover", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ fkUsuario: idUsuario, fkForum: idForum })
+            });
+        } else {
+            return fetch("/curtida/curtir", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ fkUsuario: idUsuario, fkForum: idForum })
+            });
+        }
+    })
+    .then(() => {
+        atualizarCurtidas(idForum);
+        carregarKpis();
+        verificarCurtida(idForum);
+    });
+}
+
+
+function verificarCurtida(idForum) {
+    const idUsuario = sessionStorage.ID_USUARIO;
+
+    fetch(`/curtida/verificar/${idUsuario}/${idForum}`)
+    .then(r => r.json())
+    .then(res => {
+        const btn = document.getElementById(`btnCurtir_${idForum}`);
+        btn.innerHTML = res.curtido ? "Remover curtida" : "Curtir";
+    });
+}
+
+
+function atualizarCurtidas(idForum) {
+    fetch(`/curtida/contar/${idForum}`)
+        .then(r => r.json())
+        .then(res => {
+            document.getElementById(`curtidas_${idForum}`).innerHTML = res.totalCurtidas;
+        });
+}
+
+
+function registrarVisualizacao(idForum) {
+    const fkUsuario = sessionStorage.ID_USUARIO;
+
+    fetch("/visualizacao/registrar", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ fkUsuario, fkForum: idForum })
+    })
+    .then(() => atualizarVisualizacoes(idForum));
+}
+
+function atualizarVisualizacoes(idForum) {
+    fetch(`/visualizacao/contar/${idForum}`)
+        .then(r => r.json())
+        .then(res => {
+            document.getElementById(`views_${idForum}`).innerHTML = res.totalVisualizacoes;
+        });
+}
+
+    var menu = false;
+    
+    function exibirMenu(){
+        if (menu == false) {
+            menu = true;
+            menu_lateral.style.display = "flex";
+        } else { 
+            menu = false;
+            menu_lateral.style.display = "none";
+        }
+    }
+
+    function sair(){
+        sessionStorage.clear();
+        window.location.href = "login.html";
+    }
+
+
+
+</script>

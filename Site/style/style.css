@@ -8,7 +8,7 @@ html{
 
 header{
     background-color: #702424;
-    min-height: 8%;
+    min-height: 60px;
     min-width: 25%;
     display: flex;
     flex-direction: row;
@@ -17,6 +17,8 @@ header{
     color: white;
     position: relative;
 }
+
+
 
 /* Header e Menu*/
 
@@ -118,6 +120,20 @@ section {
     background-clip: content-box, padding-box;
     border-color: #f7f1e6;
     border-style: solid;
+}
+
+.txt3 {
+    background-color: #f9f5ec;
+    min-width: 74%;
+    min-height: 90%;
+    text-align: center;
+    padding: 0px;
+    border-color: #f7f1e6;
+    border-style: solid;
+}
+
+.txt3>span{
+    padding-bottom: 0;
 }
 
 .img {
@@ -263,18 +279,50 @@ footer span{
 
 /*Dashboard e KPIs*/
 
-.dash{
+.dash {
     background-color: #f7f1e6;
     width: 80%;
     height: 600px;
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
-    justify-content: space-around;
-    border-left: 10px;
-    border-color: #f9f5ec;
-    border-style: solid;
-}   
+    justify-content: center; 
+    align-items: center;
+    border-left: 10px solid #f9f5ec;
+    gap: 10px;
+    padding: 20px;
+}
+
+.dash-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: 350px;  
+    padding: 10px;
+}
+
+#bar {
+    width: 48% !important;
+    height: 300px !important;
+}
+
+#caixa_cap {
+    width: 48%;
+    max-height: 300px;
+    overflow-y: auto;
+    display: flex;
+    justify-content: flex-end;
+}
+
+#capitulos {
+    background: #f3eadc;
+    padding: 15px 20px;
+    border-radius: 8px;
+    border: 1px solid #d2c5b5;
+    max-height: 280px;
+    width: 90%;
+    overflow-y: auto;
+}
 
 .kpis{
     background-color: #945B5B;
@@ -323,17 +371,6 @@ footer span{
     text-align: center;
 }
 
-#capitulos {
-    background: #f3eadc;
-    padding: 15px 20px ;
-    border-radius: 8px;
-    border: 1px solid #d2c5b5;
-    max-width: 480px;
-    margin-top: 10px;
-    margin-left: 40px;
-    max-height: 540px;
-    overflow-y: auto;
-}
 
 #capitulos details {
     margin-bottom: 18px;
@@ -388,9 +425,7 @@ footer span{
     background: #10491B;
 }
 
-#caixa_cap {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;  
-    padding-right: 40px;
-}
+
+
+
+

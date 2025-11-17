@@ -18,7 +18,7 @@
             </ul>
         </div>
         <div class="acessar">
-            <span id="b_usuario">usuário</span>!</h3>
+            <span id="b_usuario">usuário</span>
         </div>
         <div>
             <img src="imgs/user.png" alt="" style="width: 40px; height: 40px; padding-top: 5px; padding-left: 40px;">
@@ -66,8 +66,8 @@
 
 <script>
     b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
+    var menu = false;
 
-    /* Autenticação */
     if (sessionStorage.ID_USUARIO == undefined) {
         alert("Você precisa estar logado para acessar esta página.");
         window.location = "/login.html"; 
