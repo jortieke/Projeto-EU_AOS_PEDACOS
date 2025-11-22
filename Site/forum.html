@@ -5,34 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <title>Fórum</title>
-
-    
+    <title>Fórum</title>    
 </head>
 
 <body>
+    <body>
     <header>
-        <div class="navegar">
-            <div>
-                <a href="index.html"><img src="imgs/logo2.png" alt=""></a>
-            </div>
-            <ul class="menu">
-                <li><a href="sobre-mim.html">Sobre Mim</a></li>
-                <li><a href="forum.html">Fórum</a></li>
-                <li><a href="sobre-o-livro.html">Sobre o Livro</a></li>
-                <li><a href="cadastro.html">Cadastro</a></li>
-            </ul>
+        <div class="logo">
+            <a href="index.html"><img src="imgs/logo2.png" alt=""></a> 
         </div>
+        
+        <nav>
+            <ul class="menu">
+                <li><a href="sobre-o-livro.html">Sobre o Livro</a></li>
+                <li><a href="sobre-mim.html">Sobre o Autor</a></li>
+                <li><a href="forum.html">Forum</a></li>
+            </ul>
+        </nav>
+        
         <div class="acessar">
             <span id="b_usuario">usuário</span>
         </div>
         <div>
-            <img src="imgs/user.png" alt="" style="width: 40px; height: 40px; padding-top: 5px; padding-left: 40px;">
+            <img src="imgs/user.png" alt="" style="width: 100px; height: 60px; padding-top: 5px; padding-left: 40px;">
         </div>
         <div>
             <img onclick="exibirMenu()" src="imgs/sandwich.png" alt=""
-                 style="width: 40px; height: 40px; padding-top: 5px; padding-left: 30px;">
+                 style="width: 70px; height: 40px; padding-top: 5px; padding-left: 30px;">
         </div>
         <div class="menu_lateral" id="menu_lateral">
             <ul class="menu">
@@ -43,10 +42,9 @@
         </div>
     </header>
 
-    <section>
-        <div class="faixa"></div>
+    <main>
 
-        <div class="container-escuro" style="flex-direction: column; align-items:center; padding-top:30px;">
+        <div class="container">
 
             <div class="txt3" style="width: 60%; padding: 20px; margin-bottom: 30px; align-self: center;">
                 <h2 style="text-align:center;">Criar novo tópico</h2>
@@ -70,10 +68,17 @@
 
         </div>
 
-    </section>
+    </main>
 
     <footer>
-            <span>© 2025 • Eu, Aos Pedaços</span>
+            <div class="redes-sociais" id="autor">
+                <a href="https://euaospedacos.substack.com/"><img src="imgs/substack.png" width="50px" height="50px " alt=""></a>
+                <a href="https://github.com/jortieke"><img src="imgs/git.png" width="100px" height="100px" alt=""></a>
+                <img src="imgs/foto-joao.jpg"  width="200px" height="200px" alt="">
+                <a href="https://www.linkedin.com/in/jortieke/"><img src="imgs/linkedin.png" width="100px" height="100px" alt=""></a>
+                <a href="https://lattes.cnpq.br/3030602547312886"><img src="imgs/lattes.png" width="50px" height="50px" alt=""></a>
+            </div>
+            <span>© 2025. "Eu, aos pedaços". Todos os direitos reservados.</span>
     </footer>
 
 </body>
@@ -84,10 +89,10 @@
 
 <script>
 b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
-if (sessionStorage.ID_USUARIO == undefined) {
+/* if (sessionStorage.ID_USUARIO == undefined) {
         alert("Você precisa estar logado para acessar esta página.");
         window.location = "/login.html"; 
-    }
+    } */
     
 window.onload = () => {
     carregarPosts();

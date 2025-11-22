@@ -8,28 +8,31 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <title>Painel</title>
+</head>
 
+<body>
     <header>
-        <div class="navegar">
-            <div>
-                <a href="index.html"><img src="imgs/logo2.png" alt=""></a>
-            </div>
-            <ul class="menu">
-                <li><a href="sobre-mim.html">Sobre Mim</a></li>
-                <li><a href="forum.html">Fórum</a></li>
-                <li><a href="sobre-o-livro.html">Sobre o Livro</a></li>
-                <li><a href="cadastro.html">Cadastro</a></li>
-            </ul>
+        <div class="logo">
+            <a href="index.html"><img src="imgs/logo2.png" alt=""></a> 
         </div>
+        
+        <nav>
+            <ul class="menu">
+                <li><a href="sobre-o-livro.html">Sobre o Livro</a></li>
+                <li><a href="sobre-mim.html">Sobre o Autor</a></li>
+                <li><a href="forum.html">Forum</a></li>
+            </ul>
+        </nav>
+        
         <div class="acessar">
             <span id="b_usuario">usuário</span>
         </div>
         <div>
-            <img src="imgs/user.png" alt="" style="width: 40px; height: 40px; padding-top: 5px; padding-left: 40px;">
+            <img src="imgs/user.png" alt="" style="width: 100px; height: 60px; padding-top: 5px; padding-left: 40px;">
         </div>
         <div>
             <img onclick="exibirMenu()" src="imgs/sandwich.png" alt=""
-                 style="width: 40px; height: 40px; padding-top: 5px; padding-left: 30px;">
+                 style="width: 70px; height: 40px; padding-top: 5px; padding-left: 30px;">
         </div>
         <div class="menu_lateral" id="menu_lateral">
             <ul class="menu">
@@ -39,76 +42,55 @@
             </ul>
         </div>
     </header>
-</head>
-
-<body>
-    <section>
-        <div class="faixa"></div>
-
-        <div class="container-escuro" id="container">
-
-            <div class="kpis">
-                    <div class="cards">
-                        <div class="card-kpi">
-                            <div class="title-kpi"><h2 id="kpi_titulo">Capítulos Lidos</h2></div>
-                            <div class="desc-kpi">
-                                <div class="temperatura">
-                                    <p id="kpi_capitulos">0/110</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                     <div class="cards">
-                <div class="card-kpi">
-                    <div class="title-kpi"><h2>Postagens no Fórum</h2></div>
-                        <div class="desc-kpi">
-                            <div class="temperatura">
-                                <p id="kpi_postagens">0</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="cards">
-                    <div class="card-kpi">
-                        <div class="title-kpi"><h2>Curtidas Recebidas</h2></div>
-                        <div class="desc-kpi">
-                            <div class="temperatura">
-                                <p id="kpi_curtidas_forum">0</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="cards">
-                    <div class="card-kpi">
-                        <div class="title-kpi"><h2>Visualizações Recebidas</h2></div>
-                        <div class="desc-kpi">
-                            <div class="temperatura">
-                                <p id="kpi_visualizacoes_forum">0</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-           
-
-            <div class="dash">
-                <canvas id="bar"></canvas>
-                <div id="caixa_cap">
-                    <div id="capitulos"></div>
-                </div>
-
+    <main>
+        <div class="container-dash">
+        
+            <div class="card-kpi">
+                <h3 id="kpi_titulo">Capítulos Lidos</h3>
+                <p id="kpi_capitulos">0/110</p>
             </div>
 
+        
+            <div class="card-kpi">
+                <h3>Postagens no Fórum</h3>
+                <p id="kpi_postagens">0</p>
+            </div>
+
+            <div class="card-kpi">
+                <h3>Curtidas Recebidas</h3>
+                <p id="kpi_curtidas_forum">0</p>   
+            </div>
+
+            <div class="card-kpi">
+                <h3>Visualizações Recebidas</h3>
+                <p id="kpi_visualizacoes_forum">0</p>
+            </div>
         </div>
 
-        <div class="faixa"></div>
+        <div class="container-dash">
+                <div class="dash">
+                    <canvas id="bar"></canvas>
+
+                    <div id="caixa_cap">
+                        <div id="capitulos"></div>
+                    </div>
+
+                </div>
+        </div>
+
+       </div>
         
         <footer>
-            <span>Elaborado por João Ricardo Jortieke Junior, 2025.</span>
+            <div class="redes-sociais" id="autor">
+                <a href="https://euaospedacos.substack.com/"><img src="imgs/substack.png" width="50px" height="50px " alt=""></a>
+                <a href="https://github.com/jortieke"><img src="imgs/git.png" width="100px" height="100px" alt=""></a>
+                <img src="imgs/foto-joao.jpg"  width="200px" height="200px" alt="">
+                <a href="https://www.linkedin.com/in/jortieke/"><img src="imgs/linkedin.png" width="100px" height="100px" alt=""></a>
+                <a href="https://lattes.cnpq.br/3030602547312886"><img src="imgs/lattes.png" width="50px" height="50px" alt=""></a>
+            </div>
+            <span>© 2025. "Eu, aos pedaços". Todos os direitos reservados.</span>
         </footer>
-    </section>
+    </main>
 </body>
 
 
@@ -317,7 +299,7 @@ function carregarKpis() {
         html += "</details>";
     }
 
-    html += "<button id='btnSalvarChapters' onclick='salvarCapitulos()'>Salvar Leitura</button>";
+    html += "<button id='botao-salvar' onclick='salvarCapitulos()'>Salvar Leitura</button>";
 
     document.getElementById("capitulos").innerHTML = html;
 }

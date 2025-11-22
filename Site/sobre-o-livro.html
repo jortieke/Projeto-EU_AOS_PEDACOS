@@ -5,60 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style/style.css">
     <title>Sobre o Livro</title>
+</head>
+<body>
     <header>
-        <div class="navegar">
-            <div>
-               <a href="index.html"><img src="imgs/logo2.png" alt=""></a> 
-            </div>
-            <ul class="menu">
-                <li><a href="sobre-mim.html">Sobre Mim</a></li>
-                <li><a href="forum.html">Fórum</a></li>
-                <li><a href="sobre-o-livro.html">Sobre o Livro</a></li>
-                <li><a href="cadastro.html">Cadastro</a></li>
-            </ul>
+        <div class="logo">
+            <a href="index.html"><img src="imgs/logo2.png" alt=""></a> 
         </div>
+        
+        <nav>
+            <ul class="menu">
+                <li><a href="sobre-o-livro.html">Sobre o Livro</a></li>
+                <li><a href="sobre-mim.html">Sobre o Autor</a></li>
+                <li><a href="forum.html">Forum</a></li>
+            </ul>
+        </nav>
+        
         <div class="acessar">
             <span id="b_usuario">usuário</span>
         </div>
         <div>
-            <img src="imgs/user.png" alt="" style="width: 40px; height: 40px; padding-top: 5px; padding-left: 40px;">
+            <img src="imgs/user.png" alt="" style="width: 100px; height: 60px; padding-top: 5px; padding-left: 40px;">
         </div>
         <div>
-            <img onclick="exibirMenu()" src="imgs/sandwich.png" alt="" style="width: 40px; height: 40px; padding-top: 5px; padding-left: 30px;">
+            <img onclick="exibirMenu()" src="imgs/sandwich.png" alt=""
+                 style="width: 70px; height: 40px; padding-top: 5px; padding-left: 30px;">
         </div>
         <div class="menu_lateral" id="menu_lateral">
-                <ul class="menu">
+            <ul class="menu">
                 <li><a href="sobre-mim.html">Configurações</a></li>
                 <li><a href="painel.html">Verificar Painel</a></li>
                 <li onclick="sair()"><a href="index.html">Sair</a></li>
             </ul>
         </div>
     </header>
-</head>
-<body>
-    <section>
-        <div class="faixa"></div>
-        <div class="container-escuro">
+
+    <main>
+        <h2>Leia uma amostra e avalie o livro!</h2>
+        <div class="container">
             
             <div style=" padding-left:60px; width: 90%; height: 100%;">
-                <embed src="pdf/amostra_livro.pdf" type="application/pdf" width="100%" height="500px" style="padding-top: 25px;"> 
+                <embed src="pdf/amostra_livro.pdf" type="application/pdf" width="100%" height="700px" style="padding-top: 25px;"> 
             </div>
             <div class="book">
                 
                 <img src="imgs/capa-livro.jpg" style="width: 80%; height: 80%; padding-top: 25px;" alt="" > 
                 <div class="kpi">
-                    <div class="review">
-                        <div class="cards">
-                            <div>
-                                <div>
-                                    <div>
-                                        <h1 id="media_rating" style="color: #10491B; padding-left: 50px;">--</h1>
-                                        <h3 style="color: #10491B">Média de Avaliações</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <h1 id="media_rating" style="color: #10491B">--</h1> 
+                    <h3 style="color: #10491B">Média de Avaliações</h3>                      
                 </div>    
                 <div class="rating">
                     <input type="radio" id="star5" name="rating" value="5" onchange="enviarAvaliacao(this.value)" />
@@ -72,15 +65,22 @@
                     <input type="radio" id="star1" name="rating" value="1" onchange="enviarAvaliacao(this.value)" />
                     <label for="star1" title="1 estrela">★</label> 
                 </div>
+                <a href="https://a.co/d/8cDn9St">Adquira o seu!</a>
             </div>
 
         </div>
-        <div class="faixa"> </div>
 
         <footer>
-            <span>Elaborado por João Ricardo Jortieke Junior, 2025.</span>
+            <div class="redes-sociais" id="autor">
+                <a href="https://euaospedacos.substack.com/"><img src="imgs/substack.png" width="50px" height="50px " alt=""></a>
+                <a href="https://github.com/jortieke"><img src="imgs/git.png" width="100px" height="100px" alt=""></a>
+                <img src="imgs/foto-joao.jpg"  width="200px" height="200px" alt="">
+                <a href="https://www.linkedin.com/in/jortieke/"><img src="imgs/linkedin.png" width="100px" height="100px" alt=""></a>
+                <a href="https://lattes.cnpq.br/3030602547312886"><img src="imgs/lattes.png" width="50px" height="50px" alt=""></a>
+            </div>
+            <span>© 2025. "Eu, aos pedaços". Todos os direitos reservados.</span>
         </footer>
-    </section>
+    </main>
 </body>
 
 </html>
@@ -89,11 +89,11 @@
     b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
     var menu = false;
 
-    /* Autenticação */
+    /* 
     if (sessionStorage.ID_USUARIO == undefined) {
         alert("Você precisa estar logado para acessar esta página.");
         window.location = "/login.html"; 
-    }
+    }Autenticação */
 
     const idUsuario = sessionStorage.ID_USUARIO;
     const idLivro = 1;
