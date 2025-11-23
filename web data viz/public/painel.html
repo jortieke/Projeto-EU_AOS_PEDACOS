@@ -97,7 +97,6 @@
 </html>
 
 <script>
-/*  INICIALIZAÇÃO  */
 
 b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
 let chartCapitulos = null;
@@ -114,7 +113,6 @@ window.onload = () => {
 };
 
 
-/*  SALVAR CAPÍTULOS LIDOS (POST) */
 
 function salvarCapitulos() {
     const idUsuario = sessionStorage.ID_USUARIO;
@@ -144,12 +142,11 @@ function salvarCapitulos() {
     .catch(err => console.error(err));
 }
 
-/*  CARREGAR CAPÍTULOS LIDOS */
 
 function preencherCapitulosMarcados() {
     const idUsuario = sessionStorage.ID_USUARIO;
 
-    fetch(`/leitura/listar/${idUsuario}`)   /* <----- corrigido */
+    fetch(`/leitura/listar/${idUsuario}`) 
         .then(res => res.json())
         .then(lista => {
             lista.forEach(reg => {
@@ -159,7 +156,6 @@ function preencherCapitulosMarcados() {
         });
 }
 
-/*  KPI + GRÁFICO  */
 
 function atualizarKpiCapitulos() {
     const idUsuario = sessionStorage.ID_USUARIO;
@@ -179,19 +175,18 @@ function processarDadosPorMes(dadosBrutos) {
     const contagemMensal = {};
 
     dadosBrutos.forEach(reg => {
-        if (!reg.dtLeitura) return;  // Evita erros caso a data não exista
+        if (!reg.dtLeitura) return; 
 
         const data = new Date(reg.dtLeitura);
-        const mes = data.getMonth();    // 0–11
-        const ano = data.getFullYear(); // 2025, etc.
+        const mes = data.getMonth();   
+        const ano = data.getFullYear(); 
 
         const nomeMes = nomesMeses[mes];
-        const chave = `${nomeMes}/${ano}`; // Ex: Fev/2025
+        const chave = `${nomeMes}/${ano}`;
 
         contagemMensal[chave] = (contagemMensal[chave] || 0) + 1;
     });
 
-    // Ordenação cronológica real (e não ordem alfabética)
     const labelsOrdenados = Object.keys(contagemMensal).sort((a, b) => {
         const [mA, aA] = a.split('/');
         const [mB, aB] = b.split('/');
@@ -271,12 +266,12 @@ function carregarKpis() {
 
      function montarCapitulos() {
     var blocos = [
-        ["Parte I", 1, 20],
-        ["Parte II", 21, 40],
-        ["Parte III", 41, 60],
-        ["Parte IV", 61, 80],
+        ["Parte VI", 101, 110],
         ["Parte V", 81, 100],
-        ["Parte VI", 101, 110]
+        ["Parte IV", 61, 80],
+        ["Parte III", 41, 60],
+        ["Parte II", 21, 40],
+        ["Parte I", 1, 20]
     ];
 
     var html = "";
