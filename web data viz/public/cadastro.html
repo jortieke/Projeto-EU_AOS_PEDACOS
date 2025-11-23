@@ -5,53 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style/style.css">
     <title>Cadastro</title>
-    <header>
-        <div class="navegar">
-            <div>
-                <a href="index.html"><img src="imgs/logo2.png" alt=""></a>
-            </div>
-            <ul class="menu">
-                <li><a href="sobre-mim.html">Sobre Mim</a></li>
-                <li><a href="forum.html">Fórum</a></li>
-                <li><a href="sobre-o-livro.html">Sobre o Livro</a></li>
-                <li><a href="cadastro.html">Cadastro</a></li>
-            </ul>
-        </div>
-        <div class="acessar">
-            <a href="login.html">Acesse sua Conta</a>
-        </div>
-    </header>
 </head>
 <body>
-    <section>
-        <div class="faixa"></div>
+    <header>
+        <div class="logo">
+            <a href="index.html"><img src="imgs/logo2.png" alt=""></a> 
+        </div>
+        
+        <nav>
+            <ul class="menu">
+                <li><a href="index.html#livro">Livro</a></li>
+                <li><a href="index.html#projeto">Projeto</a></li>
+                <li><a href="index.html#autor">Redes do Autor</a></li>
+            </ul>
+        </nav>
+        
+        <div class="acessar">
+            <a href="login.html">Acesse sua Conta</a>
+            <a href="cadastro.html">Cadastro</a>
+        </div>
+    </header>
+    <main>
         <div class="login-box">
-
-            <div class="puzzle">
-
-                <img src="imgs/puzzle.png" alt="">
-            
-            </div>
-            
-            <div class="login-cadastro">
+           
+            <div class="login-cadastro" id="login-cadastro">
+                <h2>Bem vinda(o)!</h2>
                 <div class="campo">
-                    <span>Nome:</span>
+                    <span>Nome:</span><br>
                     <input id="nome_input" type="text" placeholder="Seu nome" />
                 </div>
                 <div class="campo">
-                    <span>CPF:</span>
-                    <input id="cpf_input" type="text" placeholder="Digite seu CPF" />
+                    <span>CPF:</span><br>
+                    <input id="cpf_input" type="text" placeholder="Apenas números" />
                 </div>
                 <div class="campo">
-                    <span>E-mail:</span>
-                    <input id="email_input" type="text" placeholder="meuemail@provedor.com" />
+                    <span>E-mail:</span><br>
+                    <input id="email_input" type="text" placeholder="seuemail@provedor.com" />
                 </div>
                 <div class="campo">
-                    <span>Senha:</span>
+                    <span>Senha:</span> <br>
                     <input id="senha_input" type="password" placeholder="******" />
                 </div>
                 <div class="campo">
-                    <span>Confirmação da Senha:</span>
+                    <span>Confirmação da Senha:</span> <br>
                     <input id="confirmacao_senha_input" type="password" placeholder="******" />
                 </div>
       
@@ -59,12 +55,18 @@
             </div>
 
         </div>
-        <div class="faixa">
             
         <footer>
-            <span>Elaborado por João Ricardo Jortieke Junior, 2025.</span>
+            <div class="redes-sociais" id="autor">
+                <a href="https://euaospedacos.substack.com/"><img src="imgs/substack.png" width="50px" height="50px " alt=""></a>
+                <a href="https://github.com/jortieke"><img src="imgs/git.png" width="100px" height="100px" alt=""></a>
+                <img src="imgs/foto-joao.jpg"  width="200px" height="200px" alt="">
+                <a href="https://www.linkedin.com/in/jortieke/"><img src="imgs/linkedin.png" width="100px" height="100px" alt=""></a>
+                <a href="https://lattes.cnpq.br/3030602547312886"><img src="imgs/lattes.png" width="50px" height="50px" alt=""></a>
+            </div>
+            <span>© 2025. "Eu, aos pedaços". Todos os direitos reservados.</span>
         </footer>
-    </section>
+    </main>
     
     
 </body>
