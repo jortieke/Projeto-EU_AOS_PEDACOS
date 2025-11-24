@@ -13,12 +13,24 @@ function listar(idUsuario) {
 }
 
 function salvar(idUsuario, capitulos) {
-    if (capitulos.length === 0) return Promise.resolve();
+    if (capitulos.length === 0) {
+        return Promise.resolve();
+    }
 
-    const values = capitulos.map(c => `(${idUsuario}, ${c})`).join(",");
+    var values = "";
+    
+    for (var i = 0; i < capitulos.length; i++) {
+        var c = capitulos[i];
+
+        if (i === 0) {
+            values = "(" + idUsuario + ", " + c + ")";
+        } else {
+            values = values + ",(" + idUsuario + ", " + c + ")";
+        }
+    }
 
     const inserir = `
-        INSERT IGNORE INTO leitura (fkUsuario, fkCapitulo)
+        INSERT INTO leitura (fkUsuario, fkCapitulo)
         VALUES ${values};
     `;
 

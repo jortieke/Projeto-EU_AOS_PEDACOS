@@ -86,29 +86,32 @@
 </html>
 
 <script>
-    b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
-    var menu = false;
+ b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
+var menu = false;
 
-    /* 
-    if (sessionStorage.ID_USUARIO == undefined) {
-        alert("Você precisa estar logado para acessar esta página.");
-        window.location = "/login.html"; 
-    }Autenticação */
+window.onload = () => {
+    carregarMedia();
+};
+
+if (sessionStorage.ID_USUARIO == undefined) {
+    alert("Você precisa estar logado para acessar esta página.");
+    window.location = "/login.html"; 
+}
 
     const idUsuario = sessionStorage.ID_USUARIO;
     const idLivro = 1;
 
-    function carregarMedia() {
+function carregarMedia() {
     fetch("/avaliacao/media")
         .then(r => r.json())
         .then(dados => {
             document.getElementById("media_rating").innerText = dados[0].media ?? "0.0";
         });
-    }
+ }
 
-    carregarMedia();
 
-    function enviarAvaliacao() {
+
+function enviarAvaliacao() {
     const nota = document.querySelector('input[name="rating"]:checked')?.value;
 
     if (!nota) {

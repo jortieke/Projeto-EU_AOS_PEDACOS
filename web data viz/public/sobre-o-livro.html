@@ -54,15 +54,15 @@
                     <h3 style="color: #10491B">Média de Avaliações</h3>                      
                 </div>    
                 <div class="rating">
-                    <input type="radio" id="star5" name="rating" value="5" onchange="enviarAvaliacao(this.value)" />
+                    <input type="radio" id="star5" name="rating" value="5" onchange="enviarAvaliacao(this.value)"/>
                     <label for="star5" title="5 estrelas">★</label>
-                    <input type="radio" id="star4" name="rating" value="4" onchange="enviarAvaliacao(this.value)" />
+                    <input type="radio" id="star4" name="rating" value="4" onchange="enviarAvaliacao(this.value)"/>
                     <label for="star4" title="4 estrelas">★</label>
-                    <input type="radio" id="star3" name="rating" value="3" onchange="enviarAvaliacao(this.value)" />
+                    <input type="radio" id="star3" name="rating" value="3" onchange="enviarAvaliacao(this.value)"/>
                     <label for="star3" title="3 estrelas">★</label>
-                    <input type="radio" id="star2" name="rating" value="2" onchange="enviarAvaliacao(this.value)" />
+                    <input type="radio" id="star2" name="rating" value="2" onchange="enviarAvaliacao(this.value)"/>
                     <label for="star2" title="2 estrelas">★</label>
-                    <input type="radio" id="star1" name="rating" value="1" onchange="enviarAvaliacao(this.value)" />
+                    <input type="radio" id="star1" name="rating" value="1" onchange="enviarAvaliacao(this.value)"/>
                     <label for="star1" title="1 estrela">★</label> 
                 </div>
                 <a href="https://a.co/d/8cDn9St">Adquira o seu!</a>
@@ -93,56 +93,55 @@
 if (sessionStorage.ID_USUARIO == undefined) {
         alert("Você precisa estar logado para acessar esta página.");
         window.location = "/login.html"; 
-    }Autenticação 
-
-    const idUsuario = sessionStorage.ID_USUARIO;
-    const idLivro = 1;
+    }
+    var idUsuario = sessionStorage.ID_USUARIO;
+    var idLivro = 1;
 
     function carregarMedia() {
-    fetch("/avaliacao/media")
-        .then(r => r.json())
-        .then(dados => {
-            document.getElementById("media_rating").innerText = dados[0].media ?? "0.0";
-        });
-    }
+        fetch("/avaliacao/media")
+            .then(r => r.json())
+            .then(dados => {
+                document.getElementById("media_rating").innerText = dados[0].media ?? "0.0";
+            });
+        }
 
     carregarMedia();
 
     function enviarAvaliacao() {
-    const nota = document.querySelector('input[name="rating"]:checked')?.value;
+        var nota = document.querySelector('input[name="rating"]:checked')?.value;
 
-    if (!nota) {
-        alert("Selecione uma nota.");
-        return;
-    }
-
-    const idUsuario = sessionStorage.ID_USUARIO;
-
-    if (!idUsuario) {
-        alert("Usuário não está logado.");
-        return;
-    }
-
-    fetch("/avaliacao/enviar", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            idUsuario: idUsuario,
-            idLivro: 1,
-            nota: Number(nota)
-        })
-    })
-    .then(r => {
-        if (r.ok) {
-            alert("Avaliação enviada.");
-            carregarMedia();
-        } else {
-            alert("Erro ao enviar avaliação.");
+        if (!nota) {
+            alert("Selecione uma nota.");
+            return;
         }
-    });
-}
+
+        var idUsuario = sessionStorage.ID_USUARIO;
+
+        if (!idUsuario) {
+            alert("Usuário não está logado.");
+            return;
+        }
+
+        fetch("/avaliacao/enviar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idUsuario: idUsuario,
+                idLivro: 1,
+                nota: Number(nota)
+            })
+        })
+        .then(r => {
+            if (r.ok) {
+                alert("Avaliação enviada.");
+                carregarMedia();
+            } else {
+                alert("Você já avaliou o livro.");
+            }
+        });
+    }
 
     function exibirMenu(){
         if (menu == false) {

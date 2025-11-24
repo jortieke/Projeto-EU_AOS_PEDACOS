@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <header>
+    <header id="logout" display="flex">
         <div class="logo">
             <a href="index.html"><img src="imgs/logo2.png" alt=""></a> 
         </div>
@@ -24,6 +24,37 @@
         <div class="acessar">
             <a href="login.html#login-cadastro">Acesse sua Conta</a>
             <a href="cadastro.html#login-cadastro">Cadastro</a>
+        </div>
+    </header>
+    <header id="login" display="none">
+        <div class="logo">
+            <a href="index.html"><img src="imgs/logo2.png" alt=""></a> 
+        </div>
+        
+        <nav>
+            <ul class="menu">
+                <li><a href="sobre-o-livro.html">Sobre o Livro</a></li>
+                <li><a href="sobre-mim.html">Sobre o Autor</a></li>
+                <li><a href="forum.html">Forum</a></li>
+            </ul>
+        </nav>
+        
+        <div class="acessar">
+            <span id="b_usuario">usuário</span>
+        </div>
+        <div>
+            <img src="imgs/user.png" alt="" style="width: 100px; height: 60px; padding-top: 5px; padding-left: 40px;">
+        </div>
+        <div>
+            <img onclick="exibirMenu()" src="imgs/sandwich.png" alt=""
+                 style="width: 70px; height: 40px; padding-top: 5px; padding-left: 30px;">
+        </div>
+        <div class="menu_lateral" id="menu_lateral">
+            <ul class="menu">
+                <li><a href="sobre-mim.html">Configurações</a></li>
+                <li><a href="painel.html">Verificar Painel</a></li>
+                <li onclick="sair()"><a href="index.html">Sair</a></li>
+            </ul>
         </div>
     </header>
     
@@ -91,3 +122,40 @@
 
 </html>
 
+<script>
+    b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
+    var menu = false;
+    
+    window.onload = () => {
+        mostrarMenu()
+    }
+   
+
+    function mostrarMenu(){
+        if (sessionStorage.ID_USUARIO == undefined) {
+            document.getElementById('login').style.display = 'None';
+            document.getElementById('logout').style.display = 'Flex';
+        } else {
+            document.getElementById('login').style.display = 'Flex';
+            document.getElementById('logout').style.display = 'None';
+        }
+    }
+        
+    
+    function exibirMenu(){
+        if (menu == false) {
+            menu = true;
+            menu_lateral.style.display = "flex";
+        } else { 
+            menu = false;
+            menu_lateral.style.display = "none";
+        }
+        
+    }
+
+    function sair(){
+        sessionStorage.clear();
+        
+    }
+
+</script>

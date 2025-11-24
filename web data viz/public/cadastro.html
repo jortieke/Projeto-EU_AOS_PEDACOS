@@ -78,14 +78,21 @@
     function cadastrar() {
         var nomeVar = nome_input.value;
         var emailVar = email_input.value;
-        var senhaVar = senha_input.value;
-        var confirmacaoSenhaVar = confirmacao_senha_input.value;
+        var senhaVar = senha_input.value.trim();
+        var confirmacaoSenhaVar = confirmacao_senha_input.value.trim();
         var cpfVar = cpf_input.value;
 
         if (!nomeVar || !emailVar || !senhaVar || !confirmacaoSenhaVar || !cpfVar) {
             alert("Preencha todos os campos.");
             return;
         }
+
+      /* if (senhaVar.length < 8) 
+            alert("A senha deve conter ao menos oito caracteres.")
+
+        lista
+
+        if(!senhaVar.includes('@' || '!' || '#' || '$' || '%' || '* ')) */
 
         if (senhaVar !== confirmacaoSenhaVar) {
             alert("As senhas não coincidem.");

@@ -93,28 +93,45 @@ if (sessionStorage.ID_USUARIO == undefined) {
         alert("Você precisa estar logado para acessar esta página.");
         window.location = "/login.html"; 
     } 
+
+    var menu = false;
+    
+    function exibirMenu(){
+        if (menu == false) {
+            menu = true;
+            menu_lateral.style.display = "flex";
+        } else { 
+            menu = false;
+            menu_lateral.style.display = "none";
+        }
+    }
+
+    function sair(){
+        sessionStorage.clear();
+        window.location.href = "login.html";
+    }
     
 window.onload = () => {
     carregarPosts();
 };
 
 
-function carregarPosts() {
-    fetch("/forum/listar")
-        .then(res => res.json())
-        .then(lista => {
-            const area = document.getElementById("lista_forum");
-            area.innerHTML = "";
+    function carregarPosts() {
+        fetch("/forum/listar")
+            .then(res => res.json())
+            .then(lista => {
+                const area = document.getElementById("lista_forum");
+                area.innerHTML = "";
 
-            lista.forEach(post => {
-                area.innerHTML += montarPostHTML(post);
-                registrarVisualizacao(post.idForum);
-                verificarCurtida(post.idForum);
-                atualizarCurtidas(post.idForum);
-                atualizarVisualizacoes(post.idForum);
+                lista.forEach(post => {
+                    area.innerHTML += montarPostHTML(post);
+                    registrarVisualizacao(post.idForum);
+                    verificarCurtida(post.idForum);
+                    atualizarCurtidas(post.idForum);
+                    atualizarVisualizacoes(post.idForum);
+                });
             });
-        });
-}
+    }
 
 
 function montarPostHTML(post) {
@@ -139,112 +156,95 @@ function montarPostHTML(post) {
     `;
 }
 
-function criarPostagem() {
-    const idUsuario = sessionStorage.ID_USUARIO;
-    const titulo = document.getElementById("titulo_forum").value;
-    const descricao = document.getElementById("descricao_forum").value;
+    function criarPostagem() {
+        const idUsuario = sessionStorage.ID_USUARIO;
+        const titulo = document.getElementById("titulo_forum").value;
+        const descricao = document.getElementById("descricao_forum").value;
 
-    fetch("/forum/criar", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ titulo, descricao, idUsuario })
-    })
-    .then(res => {
-        if (!res.ok) throw "Erro ao criar post";
-        return res.json();
-    })
-    .then(() => {
-        carregarPosts();
-        carregarKpis();
-    });
-}
-
-
-function curtir(idForum) {
-    const idUsuario = sessionStorage.ID_USUARIO;
-
-    fetch(`/curtida/verificar/${idUsuario}/${idForum}`)
-    .then(r => r.json())
-    .then(res => {
-        if (res.curtido) {
-            return fetch("/curtida/remover", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ fkUsuario: idUsuario, fkForum: idForum })
-            });
-        } else {
-            return fetch("/curtida/curtir", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ fkUsuario: idUsuario, fkForum: idForum })
-            });
-        }
-    })
-    .then(() => {
-        atualizarCurtidas(idForum);
-        verificarCurtida(idForum);
-        carregarKpis();
-    });
-}
-
-
-function verificarCurtida(idForum) {
-    const idUsuario = sessionStorage.ID_USUARIO;
-
-    fetch(`/curtida/verificar/${idUsuario}/${idForum}`)
-    .then(r => r.json())
-    .then(res => {
-        const btn = document.getElementById(`btnCurtir_${idForum}`);
-        btn.innerHTML = res.curtido ? `<img src="imgs/liked.png" style="width: 20px; height: 20px;" alt="">` : `<img src="imgs/not-liked.png" style="width: 20px; height: 20px;" alt="">`;
-    });
-}
-
-
-function atualizarCurtidas(idForum) {
-    fetch(`/curtida/contar/${idForum}`)
-        .then(r => r.json())
+        fetch("/forum/criar", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ titulo, descricao, idUsuario })
+        })
         .then(res => {
-            document.getElementById(`curtidas_${idForum}`).innerHTML = res.totalCurtidas;
+            if (!res.ok) throw "Erro ao criar post";
+            return res.json();
+        })
+        .then(() => {
+            carregarPosts();
+            carregarKpis();
         });
-}
-
-
-function registrarVisualizacao(idForum) {
-    const fkUsuario = sessionStorage.ID_USUARIO;
-
-    fetch("/visualizacao/registrar", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ fkUsuario, fkForum: idForum })
-    })
-    .then(() => atualizarVisualizacoes(idForum));
-}
-
-function atualizarVisualizacoes(idForum) {
-    fetch(`/visualizacao/contar/${idForum}`)
-        .then(r => r.json())
-        .then(res => {
-            document.getElementById(`views_${idForum}`).innerHTML = res.totalVisualizacoes;
-        });
-}
-
-    var menu = false;
-    
-    function exibirMenu(){
-        if (menu == false) {
-            menu = true;
-            menu_lateral.style.display = "flex";
-        } else { 
-            menu = false;
-            menu_lateral.style.display = "none";
-        }
-    }
-
-    function sair(){
-        sessionStorage.clear();
-        window.location.href = "login.html";
     }
 
 
+    function curtir(idForum) {
+        const idUsuario = sessionStorage.ID_USUARIO;
+
+        fetch(`/curtida/verificar/${idUsuario}/${idForum}`)
+        .then(r => r.json())
+        .then(res => {
+            if (res.curtido) {
+                return fetch("/curtida/remover", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({ fkUsuario: idUsuario, fkForum: idForum })
+                });
+            } else {
+                return fetch("/curtida/curtir", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({ fkUsuario: idUsuario, fkForum: idForum })
+                });
+            }
+        })
+        .then(() => {
+            atualizarCurtidas(idForum);
+            verificarCurtida(idForum);
+            carregarKpis();
+        });
+    }
+
+
+    function verificarCurtida(idForum) {
+        const idUsuario = sessionStorage.ID_USUARIO;
+
+        fetch(`/curtida/verificar/${idUsuario}/${idForum}`)
+        .then(r => r.json())
+        .then(res => {
+            const btn = document.getElementById(`btnCurtir_${idForum}`);
+            btn.innerHTML = res.curtido ? `
+            <img src="imgs/liked.png" style="width: 20px; height: 20px;" alt="">` 
+            : `<img src="imgs/not-liked.png" style="width: 20px; height: 20px;" alt="">`;
+        });
+    }
+
+
+    function atualizarCurtidas(idForum) {
+        fetch(`/curtida/contar/${idForum}`)
+            .then(r => r.json())
+            .then(res => {
+                document.getElementById(`curtidas_${idForum}`).innerHTML = res.totalCurtidas;
+            });
+    }
+
+
+    function registrarVisualizacao(idForum) {
+        const fkUsuario = sessionStorage.ID_USUARIO;
+
+        fetch("/visualizacao/registrar", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ fkUsuario, fkForum: idForum })
+        })
+        .then(() => atualizarVisualizacoes(idForum));
+    }
+
+    function atualizarVisualizacoes(idForum) {
+        fetch(`/visualizacao/contar/${idForum}`)
+            .then(r => r.json())
+            .then(res => {
+                document.getElementById(`views_${idForum}`).innerHTML = res.totalVisualizacoes;
+            });
+    }
 
 </script>

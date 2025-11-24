@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <header>
+    <header  id="logout" style="display: flex;">
         <div class="logo">
             <a href="index.html"><img src="imgs/logo2.png" alt=""></a> 
         </div>
@@ -99,213 +99,11 @@
 <script>
 
 b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
-let chartCapitulos = null;
-const nomesMeses = [
-    "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
-    "Jul", "Ago", "Set", "Out", "Nov", "Dez"
-];
 
-window.onload = () => {
-    montarCapitulos();
-    preencherCapitulosMarcados();
-    atualizarKpiCapitulos();
-    carregarKpis();
-};
-
-
-
-function salvarCapitulos() {
-    const idUsuario = sessionStorage.ID_USUARIO;
-    const lidos = [];
-
-    for (let i = 1; i <= 110; i++) {
-        let c = document.getElementById("cap" + i);
-        if (c && c.checked) lidos.push(i);
-    }
-
-    fetch("/leitura/salvar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            idUsuario: idUsuario,
-            capitulos: lidos
-        })
-    })
-    .then(res => {
-        if (!res.ok) throw new Error("Erro ao salvar capítulos");
-        return res.json();
-    })
-    .then(() => {
-        alert("Capítulos salvos com sucesso!");
-        atualizarKpiCapitulos();
-    })
-    .catch(err => console.error(err));
-}
-
-
-function preencherCapitulosMarcados() {
-    const idUsuario = sessionStorage.ID_USUARIO;
-
-    fetch(`/leitura/listar/${idUsuario}`) 
-        .then(res => res.json())
-        .then(lista => {
-            lista.forEach(reg => {
-                const el = document.getElementById("cap" + reg.capitulo);
-                if (el) el.checked = true;
-            });
-        });
-}
-
-
-function atualizarKpiCapitulos() {
-    const idUsuario = sessionStorage.ID_USUARIO;
-
-    fetch(`/leitura/listar/${idUsuario}`, { cache: "no-store" })
-    .then(r => r.json())
-    .then(lista => {
-        document.getElementById("kpi_capitulos").innerText = `${lista.length}/110`;
-
-        const dadosProcessados = processarDadosPorMes(lista);
-        atualizarGraficoBarra(dadosProcessados);
-    })
-    .catch(err => console.error("Erro ao atualizar:", err));
-}
-
-function processarDadosPorMes(dadosBrutos) {
-    const contagemMensal = {};
-
-    dadosBrutos.forEach(reg => {
-        if (!reg.dtLeitura) return; 
-
-        const data = new Date(reg.dtLeitura);
-        const mes = data.getMonth();   
-        const ano = data.getFullYear(); 
-
-        const nomeMes = nomesMeses[mes];
-        const chave = `${nomeMes}/${ano}`;
-
-        contagemMensal[chave] = (contagemMensal[chave] || 0) + 1;
-    });
-
-    const labelsOrdenados = Object.keys(contagemMensal).sort((a, b) => {
-        const [mA, aA] = a.split('/');
-        const [mB, aB] = b.split('/');
-
-        const dataA = new Date(aA, nomesMeses.indexOf(mA), 1);
-        const dataB = new Date(aB, nomesMeses.indexOf(mB), 1);
-
-        return dataA - dataB;
-    });
-
-    const dadosOrdenados = labelsOrdenados.map(k => contagemMensal[k]);
-
-    return {
-        labels: labelsOrdenados,
-        data: dadosOrdenados
-    };
-}
-
-
-
-function atualizarGraficoBarra(dados) {
-    const ctx = document.getElementById('bar').getContext('2d');
-
-    if (chartCapitulos) chartCapitulos.destroy();
-
-    const colors = ['#1e40af', '#10b981', '#f59e0b', '#3b82f6', '#ef4444'];
-
-    chartCapitulos = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: dados.labels,
-            datasets: [{
-                label: "Capítulos lidos",
-                data: dados.data,
-                backgroundColor: dados.labels.map((_, i) => colors[i % colors.length]),
-                borderColor: "#1f2937",
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                title: {
-                    display: true,
-                    text: "Capítulos Lidos por Mês",
-                    font: { size: 16 }
-                }
-            },
-            scales: {
-                x: { title: { display: true, text: "Mês/Ano" }},
-                y: {
-                    beginAtZero: true,
-                    title: { display: true, text: "Quantidade" },
-                    ticks: { stepSize: 1 }
-                }
-            }
+    if (sessionStorage.ID_USUARIO == undefined) {
+            alert("Você precisa estar logado para acessar esta página.");
+            window.location = "/login.html"; 
         }
-    });
-}
-
-
-
-function carregarKpis() {
-    var idUsuario = sessionStorage.ID_USUARIO;
-
-    fetch(`/forum/kpis/${idUsuario}`)
-    .then(r => r.json())
-    .then(resposta => {
-        document.getElementById("kpi_postagens").innerHTML = resposta.postagens;
-        document.getElementById("kpi_curtidas_forum").innerHTML = resposta.curtidas;
-        document.getElementById("kpi_visualizacoes_forum").innerHTML = resposta.visualizacoes;
-    })
-    .catch(e => console.log(e));
-}
-
-     function montarCapitulos() {
-    var blocos = [
-        ["Parte VI", 101, 110],
-        ["Parte V", 81, 100],
-        ["Parte IV", 61, 80],
-        ["Parte III", 41, 60],
-        ["Parte II", 21, 40],
-        ["Parte I", 1, 20]
-    ];
-
-    var html = "";
-
-    for (var i = 0; i < blocos.length; i++) {
-        var titulo = blocos[i][0];
-        var inicio = blocos[i][1];
-        var fim = blocos[i][2];
-
-        html += "<details>";
-        html += "<summary>" + titulo + " (Cap. " + inicio + " a " + fim + ")</summary>";
-
-        html += "<button onclick=\"marcarBloco(" + inicio + "," + fim + ")\">Marcar tudo neste bloco</button><br>";
-
-        for (var c = inicio; c <= fim; c++) {
-            html += "<label><input type='checkbox' id='cap" + c + "'> Cap. " + c + "</label> ";
-        }
-
-        html += "</details>";
-    }
-
-    html += "<button id='botao-salvar' onclick='salvarCapitulos()'>Salvar Leitura</button>";
-
-    document.getElementById("capitulos").innerHTML = html;
-}
-
-    function marcarBloco(inicio, fim) {
-    for (var c = inicio; c <= fim; c++) {
-        var checkbox = document.getElementById("cap" + c);
-        if (checkbox) {
-            checkbox.checked = true;
-        }
-    }
-}
 
     var menu = false;
 
@@ -324,6 +122,251 @@ function carregarKpis() {
         window.location.href = "login.html";
     }
 
+    var chartCapitulos = null;
+    var nomesMeses = [
+        "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+        "Jul", "Ago", "Set", "Out", "Nov", "Dez"
+    ];
 
+    window.onload = () => {
+        montarCapitulos();
+        preencherCapitulosMarcados();
+        atualizarKpiCapitulos();
+        carregarKpis();
+    };
+
+
+    function salvarCapitulos() {
+        var idUsuario = sessionStorage.ID_USUARIO;
+        var lidos = [];
+
+        for (var i = 1; i <= 110; i++) {
+            var c = document.getElementById("cap" + i);
+            if (c && c.checked) lidos.push(i);
+        }
+
+        fetch("/leitura/salvar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                idUsuario: idUsuario,
+                capitulos: lidos
+            })
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("Erro ao salvar capítulos");
+            return res.json();
+        })
+        .then(() => {
+            alert("Capítulos salvos com sucesso!");
+            atualizarKpiCapitulos();
+        })
+        .catch(err => console.error(err));
+    }
+
+
+    function preencherCapitulosMarcados() {
+        var idUsuario = sessionStorage.ID_USUARIO;
+
+        fetch(`/leitura/listar/${idUsuario}`) 
+            .then(res => res.json())
+            .then(lista => {
+                lista.forEach(reg => {
+                    var el = document.getElementById("cap" + reg.capitulo);
+                    if (el) el.checked = true;
+                });
+            });
+    }
+
+
+    function atualizarKpiCapitulos() {
+        var idUsuario = sessionStorage.ID_USUARIO;
+
+        fetch(`/leitura/listar/${idUsuario}`, { cache: "no-store" })
+        .then(r => r.json())
+        .then(lista => {
+            document.getElementById("kpi_capitulos").innerText = `${lista.length}/110`;
+
+            var dadosProcessados = processarDadosPorMes(lista);
+            atualizarGraficoBarra(dadosProcessados);
+        })
+        .catch(err => console.error("Erro ao atualizar:", err));
+    }
+
+    function processarDadosPorMes(dadosBrutos) {
+    var labels = [];      
+    var contagens = [];   
+    var nomesMeses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+                      "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+
+    for (var i = 0; i < dadosBrutos.length; i++) {
+        var reg = dadosBrutos[i];
+
+        if (!reg.dtLeitura) {
+            continue;
+        }
+
+        var data = new Date(reg.dtLeitura);
+        var mes = data.getMonth();
+        var ano = data.getFullYear();
+
+        var nomeMes = nomesMeses[mes];
+        var chave = nomeMes + "/" + ano;
+
+        var indiceExistente = -1;
+        for (var j = 0; j < labels.length; j++) {
+            if (labels[j] === chave) {
+                indiceExistente = j;
+                break;
+            }
+        }
+
+        if (indiceExistente === -1) {
+            labels.push(chave);
+            contagens.push(1);
+        } else {
+            contagens[indiceExistente] = contagens[indiceExistente] + 1;
+        }
+    }
+
+    for (var a = 0; a < labels.length - 1; a++) {
+        for (var b = 0; b < labels.length - 1 - a; b++) {
+
+            var labelA = labels[b];
+            var labelB = labels[b + 1];
+
+            var mesA = -1;
+            var mesB = -1;
+
+            for (var m = 0; m < nomesMeses.length; m++) {
+                if (labelA.startsWith(nomesMeses[m])) mesA = m;
+                if (labelB.startsWith(nomesMeses[m])) mesB = m;
+            }
+
+            var anoA = parseInt(labelA.substring(labelA.length - 4));
+            var anoB = parseInt(labelB.substring(labelB.length - 4));
+
+            var dataA = new Date(anoA, mesA, 1);
+            var dataB = new Date(anoB, mesB, 1);
+
+            if (dataA > dataB) {
+                var tempLabel = labels[b];
+                labels[b] = labels[b + 1];
+                labels[b + 1] = tempLabel;
+
+                var tempVal = contagens[b];
+                contagens[b] = contagens[b + 1];
+                contagens[b + 1] = tempVal;
+            }
+        }
+    }
+
+    return {
+        labels: labels,
+        data: contagens
+    };
+}
+
+
+
+    function atualizarGraficoBarra(dados) {
+        var ctx = document.getElementById('bar').getContext('2d');
+
+        if (chartCapitulos) chartCapitulos.destroy();
+
+        var cores= ['#F7F0E4', '#702424', '#10491B'];
+
+        chartCapitulos = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: dados.labels,
+                datasets: [{
+                    label: "Capítulos lidos",
+                    data: dados.data,
+                    backgroundColor: dados.labels.map((_, i) => cores[i % cores.length]),
+                    borderColor: "##333333",
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: "Capítulos Lidos por Mês",
+                        font: { size: 16 }
+                    }
+                },
+                scales: {
+                    x: { title: { display: true, text: "Mês/Ano" }},
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: "Quantidade" },
+                        ticks: { stepSize: 1 }
+                    }
+                }
+            }
+        });
+    }
+
+
+
+    function carregarKpis() {
+        var idUsuario = sessionStorage.ID_USUARIO;
+
+        fetch(`/forum/kpis/${idUsuario}`)
+        .then(r => r.json())
+        .then(resposta => {
+            document.getElementById("kpi_postagens").innerHTML = resposta.postagens;
+            document.getElementById("kpi_curtidas_forum").innerHTML = resposta.curtidas;
+            document.getElementById("kpi_visualizacoes_forum").innerHTML = resposta.visualizacoes;
+        })
+        .catch(e => console.log(e));
+    }
+
+        function montarCapitulos() {
+        var blocos = [
+            ["Parte VI", 101, 110],
+            ["Parte V", 81, 100],
+            ["Parte IV", 61, 80],
+            ["Parte III", 41, 60],
+            ["Parte II", 21, 40],
+            ["Parte I", 1, 20]
+        ];
+
+        var html = "";
+
+        for (var i = 0; i < blocos.length; i++) {
+            var titulo = blocos[i][0];
+            var inicio = blocos[i][1];
+            var fim = blocos[i][2];
+
+            html += "<details>";
+            html += "<summary>" + titulo + " (Cap. " + inicio + " a " + fim + ")</summary>";
+
+            html += "<button onclick=\"marcarBloco(" + inicio + "," + fim + ")\">Marcar tudo neste bloco</button><br>";
+
+            for (var c = inicio; c <= fim; c++) {
+                html += "<label><input type='checkbox' id='cap" + c + "'> Cap. " + c + "</label> ";
+            }
+
+            html += "</details>";
+        }
+
+        html += "<button id='botao-salvar' onclick='salvarCapitulos()'>Salvar Leitura</button>";
+
+        document.getElementById("capitulos").innerHTML = html;
+    }
+
+        function marcarBloco(inicio, fim) {
+        for (var c = inicio; c <= fim; c++) {
+            var checkbox = document.getElementById("cap" + c);
+            if (checkbox) {
+                checkbox.checked = true;
+            }
+        }
+    }
 
 </script>
