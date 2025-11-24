@@ -123,10 +123,6 @@ b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
     }
 
     var chartCapitulos = null;
-    var nomesMeses = [
-        "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
-        "Jul", "Ago", "Set", "Out", "Nov", "Dez"
-    ];
 
     window.onload = () => {
         montarCapitulos();
@@ -135,33 +131,37 @@ b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
         carregarKpis();
     };
 
+    function montarCapitulos() {
+        var blocos = [
+            ["Parte VI", 101, 110],
+            ["Parte V", 81, 100],
+            ["Parte IV", 61, 80],
+            ["Parte III", 41, 60],
+            ["Parte II", 21, 40],
+            ["Parte I", 1, 20]
+        ];
 
-    function salvarCapitulos() {
-        var idUsuario = sessionStorage.ID_USUARIO;
-        var lidos = [];
+        var blocoChecagem = "";
 
-        for (var i = 1; i <= 110; i++) {
-            var c = document.getElementById("cap" + i);
-            if (c && c.checked) lidos.push(i);
+        for (var i = 0; i < blocos.length; i++) {
+            var titulo = blocos[i][0];
+            var inicio = blocos[i][1];
+            var fim = blocos[i][2];
+
+            blocoChecagem += `<details>`;
+            blocoChecagem += `<summary> ${titulo} (Cap. ${inicio} a ${fim})</summary>`;
+
+
+            for (var c = inicio; c <= fim; c++) {
+                blocoChecagem += `<label><input type='checkbox' id='cap${c}'> Cap. ${c} </label>`;
+            }
+
+            blocoChecagem += `</details>`;
         }
 
-        fetch("/leitura/salvar", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                idUsuario: idUsuario,
-                capitulos: lidos
-            })
-        })
-        .then(res => {
-            if (!res.ok) throw new Error("Erro ao salvar capítulos");
-            return res.json();
-        })
-        .then(() => {
-            alert("Capítulos salvos com sucesso!");
-            atualizarKpiCapitulos();
-        })
-        .catch(err => console.error(err));
+        blocoChecagem += `<button id='botao-salvar' onclick='salvarCapitulos()'>Salvar Leitura</button>`;
+
+        document.getElementById("capitulos").innerHTML = blocoChecagem;
     }
 
 
@@ -193,71 +193,79 @@ b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
         .catch(err => console.error("Erro ao atualizar:", err));
     }
 
+    function carregarKpis() {
+        var idUsuario = sessionStorage.ID_USUARIO;
+
+        fetch(`/forum/kpis/${idUsuario}`)
+        .then(r => r.json())
+        .then(resposta => {
+            document.getElementById("kpi_postagens").innerHTML = resposta.postagens;
+            document.getElementById("kpi_curtidas_forum").innerHTML = resposta.curtidas;
+            document.getElementById("kpi_visualizacoes_forum").innerHTML = resposta.visualizacoes;
+        })
+        .catch(e => console.log(e));
+    }
+
+    function salvarCapitulos() {
+        var idUsuario = sessionStorage.ID_USUARIO;
+        var lidos = [];
+
+        for (var i = 1; i <= 110; i++) {
+            var c = document.getElementById("cap" + i);
+            if (c && c.checked) lidos.push(i);
+        }
+
+        fetch("/leitura/salvar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                idUsuario: idUsuario,
+                capitulos: lidos
+            })
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("Erro ao salvar capítulos");
+            return res.json();
+        })
+        .then(() => {
+            alert("Capítulos salvos com sucesso!");
+            atualizarKpiCapitulos();
+        })
+        .catch(err => console.error(err));
+    }
+
+    
+
     function processarDadosPorMes(dadosBrutos) {
-    var labels = [];      
-    var contagens = [];   
+    var labels = [];
+    var contagens = [];
     var nomesMeses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho",
                       "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 
     for (var i = 0; i < dadosBrutos.length; i++) {
         var reg = dadosBrutos[i];
 
-        if (!reg.dtLeitura) {
-            continue;
-        }
+        if (!reg.dtLeitura) continue;
 
         var data = new Date(reg.dtLeitura);
         var mes = data.getMonth();
         var ano = data.getFullYear();
 
-        var nomeMes = nomesMeses[mes];
-        var chave = nomeMes + "/" + ano;
+        var chave = nomesMeses[mes] + "/" + ano;
 
-        var indiceExistente = -1;
+        var indice = -1;
         for (var j = 0; j < labels.length; j++) {
             if (labels[j] === chave) {
-                indiceExistente = j;
+                indice = j;
                 break;
             }
         }
 
-        if (indiceExistente === -1) {
+        if (indice === -1) {
             labels.push(chave);
             contagens.push(1);
         } else {
-            contagens[indiceExistente] = contagens[indiceExistente] + 1;
-        }
-    }
-
-    for (var a = 0; a < labels.length - 1; a++) {
-        for (var b = 0; b < labels.length - 1 - a; b++) {
-
-            var labelA = labels[b];
-            var labelB = labels[b + 1];
-
-            var mesA = -1;
-            var mesB = -1;
-
-            for (var m = 0; m < nomesMeses.length; m++) {
-                if (labelA.startsWith(nomesMeses[m])) mesA = m;
-                if (labelB.startsWith(nomesMeses[m])) mesB = m;
-            }
-
-            var anoA = parseInt(labelA.substring(labelA.length - 4));
-            var anoB = parseInt(labelB.substring(labelB.length - 4));
-
-            var dataA = new Date(anoA, mesA, 1);
-            var dataB = new Date(anoB, mesB, 1);
-
-            if (dataA > dataB) {
-                var tempLabel = labels[b];
-                labels[b] = labels[b + 1];
-                labels[b + 1] = tempLabel;
-
-                var tempVal = contagens[b];
-                contagens[b] = contagens[b + 1];
-                contagens[b + 1] = tempVal;
-            }
+            contagens[indice]++;
         }
     }
 
@@ -309,64 +317,6 @@ b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
                 }
             }
         });
-    }
-
-
-
-    function carregarKpis() {
-        var idUsuario = sessionStorage.ID_USUARIO;
-
-        fetch(`/forum/kpis/${idUsuario}`)
-        .then(r => r.json())
-        .then(resposta => {
-            document.getElementById("kpi_postagens").innerHTML = resposta.postagens;
-            document.getElementById("kpi_curtidas_forum").innerHTML = resposta.curtidas;
-            document.getElementById("kpi_visualizacoes_forum").innerHTML = resposta.visualizacoes;
-        })
-        .catch(e => console.log(e));
-    }
-
-        function montarCapitulos() {
-        var blocos = [
-            ["Parte VI", 101, 110],
-            ["Parte V", 81, 100],
-            ["Parte IV", 61, 80],
-            ["Parte III", 41, 60],
-            ["Parte II", 21, 40],
-            ["Parte I", 1, 20]
-        ];
-
-        var html = "";
-
-        for (var i = 0; i < blocos.length; i++) {
-            var titulo = blocos[i][0];
-            var inicio = blocos[i][1];
-            var fim = blocos[i][2];
-
-            html += "<details>";
-            html += "<summary>" + titulo + " (Cap. " + inicio + " a " + fim + ")</summary>";
-
-            html += "<button onclick=\"marcarBloco(" + inicio + "," + fim + ")\">Marcar tudo neste bloco</button><br>";
-
-            for (var c = inicio; c <= fim; c++) {
-                html += "<label><input type='checkbox' id='cap" + c + "'> Cap. " + c + "</label> ";
-            }
-
-            html += "</details>";
-        }
-
-        html += "<button id='botao-salvar' onclick='salvarCapitulos()'>Salvar Leitura</button>";
-
-        document.getElementById("capitulos").innerHTML = html;
-    }
-
-        function marcarBloco(inicio, fim) {
-        for (var c = inicio; c <= fim; c++) {
-            var checkbox = document.getElementById("cap" + c);
-            if (checkbox) {
-                checkbox.checked = true;
-            }
-        }
     }
 
 </script>
