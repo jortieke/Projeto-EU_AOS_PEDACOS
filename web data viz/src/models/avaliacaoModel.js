@@ -1,7 +1,7 @@
 var database = require("../database/config");
 
 function enviar(idUsuario, idLivro, nota) {
-    const sql = `
+    var sql = `
         INSERT INTO avaliacao (fkUsuario, fkLivro, nota)
         VALUES (${idUsuario}, ${idLivro}, ${nota});
     `;
@@ -9,7 +9,7 @@ function enviar(idUsuario, idLivro, nota) {
 }
 
 function media() {
-    const sql = `
+    var sql = `
         SELECT ROUND(AVG(nota), 2) AS media
         FROM avaliacao
         WHERE fkLivro = 1;

@@ -2,7 +2,7 @@ var database = require("../database/config");
 
 
 function listar(idUsuario) {
-    const instrucao = `
+    var instrucao = `
             SELECT fkCapitulo AS capitulo,
                 dtLeitura
             FROM leitura
@@ -29,7 +29,7 @@ function salvar(idUsuario, capitulos) {
         }
     }
 
-    const inserir = `
+    var inserir = `
         INSERT INTO leitura (fkUsuario, fkCapitulo)
         VALUES ${values};
     `;
@@ -38,7 +38,7 @@ function salvar(idUsuario, capitulos) {
 }
 
 function kpiMensal(idUsuario) {
-    const instrucao = `
+    var instrucao = `
         SELECT 
             MONTH(dtLeitura) AS mes,
             COUNT(*) AS quantidade

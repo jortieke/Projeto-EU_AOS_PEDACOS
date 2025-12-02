@@ -120,7 +120,7 @@ window.onload = () => {
         fetch("/forum/listar")
             .then(res => res.json())
             .then(lista => {
-                const area = document.getElementById("lista_forum");
+                var area = document.getElementById("lista_forum");
                 area.innerHTML = "";
 
                 lista.forEach(post => {
@@ -135,7 +135,7 @@ window.onload = () => {
 
 
 function montarPostHTML(post) {
-    const dataFormatada = new Date(post.dtPostagem).toLocaleString("pt-BR");
+    var dataFormatada = new Date(post.dtPostagem).toLocaleString("pt-BR");
 
     return `
         <div class="post">
@@ -157,9 +157,9 @@ function montarPostHTML(post) {
 }
 
     function criarPostagem() {
-        const idUsuario = sessionStorage.ID_USUARIO;
-        const titulo = document.getElementById("titulo_forum").value;
-        const descricao = document.getElementById("descricao_forum").value;
+        var idUsuario = sessionStorage.ID_USUARIO;
+        var titulo = document.getElementById("titulo_forum").value;
+        var descricao = document.getElementById("descricao_forum").value;
 
         fetch("/forum/criar", {
             method: "POST",
@@ -178,7 +178,7 @@ function montarPostHTML(post) {
 
 
     function curtir(idForum) {
-        const idUsuario = sessionStorage.ID_USUARIO;
+        var idUsuario = sessionStorage.ID_USUARIO;
 
         fetch(`/curtida/verificar/${idUsuario}/${idForum}`)
         .then(r => r.json())
@@ -206,12 +206,12 @@ function montarPostHTML(post) {
 
 
     function verificarCurtida(idForum) {
-        const idUsuario = sessionStorage.ID_USUARIO;
+        var idUsuario = sessionStorage.ID_USUARIO;
 
         fetch(`/curtida/verificar/${idUsuario}/${idForum}`)
         .then(r => r.json())
         .then(res => {
-            const btn = document.getElementById(`btnCurtir_${idForum}`);
+            var btn = document.getElementById(`btnCurtir_${idForum}`);
             btn.innerHTML = res.curtido ? `
             <img src="imgs/liked.png" style="width: 20px; height: 20px;" alt="">` 
             : `<img src="imgs/not-liked.png" style="width: 20px; height: 20px;" alt="">`;
@@ -229,7 +229,7 @@ function montarPostHTML(post) {
 
 
     function registrarVisualizacao(idForum) {
-        const fkUsuario = sessionStorage.ID_USUARIO;
+        var fkUsuario = sessionStorage.ID_USUARIO;
 
         fetch("/visualizacao/registrar", {
             method: "POST",

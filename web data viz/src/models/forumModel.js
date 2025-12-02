@@ -50,8 +50,8 @@ function registrarCurtida(idUsuario, idForum) {
 
 function registrarVisualizacao(idUsuario, idForum) {
     var instrucao = `
-        INSERT INTO visualizacao (idVisualizacao, fkUsuario, fkForum)
-        VALUES (FLOOR(RAND() * 999999), ${idUsuario}, ${idForum});
+        INSERT INTO visualizacao (fkUsuario, fkForum)
+        VALUES (${idUsuario}, ${idForum});
     `;
     return database.executar(instrucao);
 }

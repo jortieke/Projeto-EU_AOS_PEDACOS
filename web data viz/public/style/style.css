@@ -363,7 +363,7 @@ main{
 
 #capitulos summary {
     font-weight: bold;
-    color: #10491B;
+    color: var(--cor03);
     cursor: pointer;
     padding: 4px;
 }

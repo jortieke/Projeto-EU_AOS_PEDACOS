@@ -2,6 +2,8 @@ CREATE DATABASE euaospedacos;
 
 USE euaospedacos;
 
+SELECT * FROM usuario;
+
 CREATE TABLE usuario(
 	idUsuario INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL,
@@ -260,3 +262,5 @@ SELECT f.idForum,
         FROM forum f
         JOIN usuario u ON f.fkUsuario = u.idUsuario
         ORDER BY f.dtPostagem DESC;
+
+

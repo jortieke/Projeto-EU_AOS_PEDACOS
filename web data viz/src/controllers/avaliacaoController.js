@@ -1,7 +1,7 @@
 var avaliacaoModel = require("../models/avaliacaoModel");
 
 function enviar(req, res) {
-    const { idUsuario, idLivro, nota } = req.body;
+    var { idUsuario, idLivro, nota } = req.body;
 
     if (!idUsuario || !idLivro || !nota) {
         return res.status(400).send("Dados inválidos");

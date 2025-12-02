@@ -164,19 +164,30 @@ b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
         document.getElementById("capitulos").innerHTML = blocoChecagem;
     }
 
+    var capitulosSalvos = [];
 
-    function preencherCapitulosMarcados() {
-        var idUsuario = sessionStorage.ID_USUARIO;
+function preencherCapitulosMarcados() {
+    var idUsuario = sessionStorage.ID_USUARIO;
 
-        fetch(`/leitura/listar/${idUsuario}`) 
-            .then(res => res.json())
-            .then(lista => {
-                lista.forEach(reg => {
-                    var el = document.getElementById("cap" + reg.capitulo);
-                    if (el) el.checked = true;
-                });
-            });
-    }
+    fetch(`/leitura/listar/${idUsuario}`)
+        .then(res => res.json())
+        .then(lista => {
+
+            capitulosSalvos = [];
+
+            for (var i = 0; i < lista.length; i++) {
+                var cap = Number(lista[i].capitulo);
+                capitulosSalvos.push(cap);
+            }
+
+            for (var i = 0; i < lista.length; i++) {
+                var cap = lista[i].capitulo;
+                var el = document.getElementById("cap" + cap);
+                if (el) el.checked = true;
+            }
+        });
+}
+
 
 
     function atualizarKpiCapitulos() {
@@ -193,7 +204,7 @@ b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
         .catch(err => console.error("Erro ao atualizar:", err));
     }
 
-    function carregarKpis() {
+function carregarKpis() {
         var idUsuario = sessionStorage.ID_USUARIO;
 
         fetch(`/forum/kpis/${idUsuario}`)
@@ -207,36 +218,45 @@ b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
     }
 
     function salvarCapitulos() {
-        var idUsuario = sessionStorage.ID_USUARIO;
-        var lidos = [];
+    var idUsuario = sessionStorage.ID_USUARIO;
+    var lidos = [];
 
-        for (var i = 1; i <= 110; i++) {
-            var c = document.getElementById("cap" + i);
-            if (c && c.checked) lidos.push(i);
-        }
-
-        fetch("/leitura/salvar", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                idUsuario: idUsuario,
-                capitulos: lidos
-            })
-        })
-        .then(res => {
-            if (!res.ok) throw new Error("Erro ao salvar capítulos");
-            return res.json();
-        })
-        .then(() => {
-            alert("Capítulos salvos com sucesso!");
-            atualizarKpiCapitulos();
-        })
-        .catch(err => console.error(err));
+    for (var i = 1; i <= 110; i++) {
+        var c = document.getElementById("cap" + i);
+        if (c && c.checked) lidos.push(i);
     }
+
+    var novos = lidos.filter(cap => !capitulosSalvos.includes(cap));
+
+    if (novos.length === 0) {
+        alert("Nenhuma novidade para salvar.");
+        return;
+    }
+
+    fetch("/leitura/salvar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            idUsuario: idUsuario,
+            capitulos: novos
+        })
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Erro ao salvar capítulos");
+        return res.json();
+    })
+    .then(() => {
+        alert("Capítulos salvos!");
+        atualizarKpiCapitulos();
+        capitulosSalvos = [...capitulosSalvos, ...novos];
+    })
+    .catch(err => console.error(err));
+}
+
 
     
 
-    function processarDadosPorMes(dadosBrutos) {
+function processarDadosPorMes(dadosBrutos) {
     var labels = [];
     var contagens = [];
     var nomesMeses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho",
@@ -277,46 +297,46 @@ b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
 
 
 
-    function atualizarGraficoBarra(dados) {
-        var ctx = document.getElementById('bar').getContext('2d');
+   function atualizarGraficoBarra(dados) {
+    var ctx = document.getElementById('bar').getContext('2d');
 
-        if (chartCapitulos) chartCapitulos.destroy();
+    if (chartCapitulos) chartCapitulos.destroy();
 
-        var cores= ['#F7F0E4', '#702424', '#10491B'];
+    var cores = ['#F7F0E4', '#702424', '#10491B'];
 
-        chartCapitulos = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: dados.labels,
-                datasets: [{
-                    label: "Capítulos lidos",
-                    data: dados.data,
-                    backgroundColor: dados.labels.map((_, i) => cores[i % cores.length]),
-                    borderColor: "##333333",
-                    borderWidth: 3
-                }]
+    chartCapitulos = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: dados.labels,
+            datasets: [{
+                label: "Capítulos lidos",
+                data: dados.data,
+                backgroundColor: cores,
+                borderColor: "#333333",
+                borderWidth: 3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: "Capítulos Lidos por Mês",
+                    font: { size: 16 }
+                }
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    title: {
-                        display: true,
-                        text: "Capítulos Lidos por Mês",
-                        font: { size: 16 }
-                    }
-                },
-                scales: {
-                    x: { title: { display: true, text: "Mês/Ano" }},
-                    y: {
-                        beginAtZero: true,
-                        title: { display: true, text: "Quantidade" },
-                        ticks: { stepSize: 1 }
-                    }
+            scales: {
+                x: { title: { display: true, text: "Mês/Ano" }},
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: "Quantidade" },
+                    ticks: { stepSize: 1 }
                 }
             }
-        });
-    }
+        }
+    });
+}
 
 </script>

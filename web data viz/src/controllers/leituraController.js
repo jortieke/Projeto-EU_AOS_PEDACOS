@@ -1,7 +1,7 @@
 var leituraModel = require("../models/leituraModel");
 
 function listar(req, res) {
-    const idUsuario = req.params.idUsuario;
+    var idUsuario = req.params.idUsuario;
 
     leituraModel.listar(idUsuario)
         .then(resultado => {
@@ -14,8 +14,8 @@ function listar(req, res) {
 }
 
 function salvar(req, res) {
-    const idUsuario = req.body.idUsuario;
-    const capitulos = req.body.capitulos; // array de números
+    var idUsuario = req.body.idUsuario;
+    var capitulos = req.body.capitulos;
 
     if (!idUsuario || !Array.isArray(capitulos)) {
         res.status(400).send("Dados inválidos");
@@ -31,7 +31,7 @@ function salvar(req, res) {
 }
 
 function kpiMensal(req, res) {
-    const idUsuario = req.params.idUsuario;
+    var idUsuario = req.params.idUsuario;
 
     leituraModel.kpiMensal(idUsuario)
         .then(resultado => {
