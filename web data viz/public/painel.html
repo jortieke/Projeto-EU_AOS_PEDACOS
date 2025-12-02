@@ -52,19 +52,15 @@
 
         
             <div class="card-kpi">
-                <h3>Postagens no Fórum</h3>
-                <p id="kpi_postagens">0</p>
+                <h3>Post Mais Relevante</h3>
+                <p id="kpi_post_relevante">—</p>
             </div>
 
             <div class="card-kpi">
-                <h3>Curtidas Recebidas</h3>
-                <p id="kpi_curtidas_forum">0</p>   
+                <h3>Taxa de Retenção</h3>
+                <p id="kpi_retencao">0%</p>   
             </div>
 
-            <div class="card-kpi">
-                <h3>Visualizações Recebidas</h3>
-                <p id="kpi_visualizacoes_forum">0</p>
-            </div>
         </div>
 
         <div class="container-dash">
@@ -129,6 +125,8 @@ b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
         preencherCapitulosMarcados();
         atualizarKpiCapitulos();
         carregarKpis();
+        carregarKpiPostMaisRelevante();
+        carregarKpiRetencao();
     };
 
     function montarCapitulos() {
@@ -216,6 +214,37 @@ function carregarKpis() {
         })
         .catch(e => console.log(e));
     }
+
+function carregarKpiPostMaisRelevante() {
+    var idUsuario = sessionStorage.ID_USUARIO;
+
+    fetch(`/forum/post-mais-relevante/${idUsuario}`)
+        .then(r => r.json())
+        .then(dados => {
+            var texto = "—";
+
+            if (dados && dados.titulo) {
+                texto = dados.titulo + " (Score: " + dados.score + ")";
+            }
+
+            document.getElementById("kpi_post_relevante").innerHTML = texto;
+        });
+}
+
+function carregarKpiRetencao() {
+    fetch("/leitura/taxa-retencao")
+        .then(r => r.json())
+        .then(dados => {
+            var valor = 0;
+
+            if (dados && dados.retencaoMedia) {
+                valor = dados.retencaoMedia * 100;
+            }
+
+            document.getElementById("kpi_retencao").innerHTML = valor.toFixed(1) + "%";
+        });
+}
+
 
     function salvarCapitulos() {
     var idUsuario = sessionStorage.ID_USUARIO;

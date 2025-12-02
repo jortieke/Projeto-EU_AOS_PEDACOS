@@ -53,10 +53,28 @@ function listar(req, res) {
         .catch(e => res.status(500).json(e.sqlMessage));
 }
 
+function postMaisRelevante(req, res) {
+    var idUsuario = req.params.idUsuario;
+
+    forumModel.postMaisEngajado(idUsuario)
+        .then(resultado => {
+            if (resultado.length === 0) {
+                return res.json({ titulo: "Nenhum post", score: 0 });
+            }
+            res.json(resultado[0]);
+        })
+        .catch(e => {
+            console.log("Erro ao buscar post mais relevante:", e);
+            res.status(500).json(e.sqlMessage);
+        });
+}
+
 module.exports = {
     kpisForum,
     criar,
     curtir,
     visualizar,
-    listar
+    listar,
+    postMaisRelevante
 };
+

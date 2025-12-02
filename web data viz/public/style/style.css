@@ -584,3 +584,43 @@ footer span{
 
 /*-------------------*/
 
+/*Sobre mim?*/
+.timeline {
+    position: relative;
+    max-width: 700px;
+    margin: auto;
+}
+
+.timeline::before {
+    content: "";
+    position: absolute;
+    width: 3px;
+    background: var(--cor03);
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.div {
+    width: 50%;
+    padding: 20px;
+    position: relative;
+}
+
+.div.esquerda { left: 0; text-align: right; }
+.div.direita { left: 50%; }
+
+.div::before {
+    content: "";
+    position: absolute;
+    top: 25px;
+    width: 12px;
+    height: 12px;
+    background: var(--cor00);
+    border-radius: 50%;
+}
+
+.div.esquerda::before { right: -6px; }
+.div.direita::before { left: -6px; }
+

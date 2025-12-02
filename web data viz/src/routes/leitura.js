@@ -5,5 +5,6 @@ var leituraController = require("../controllers/leituraController");
 router.get("/listar/:idUsuario", leituraController.listar);
 router.post("/salvar", leituraController.salvar);
 router.get("/kpiMensal/:idUsuario", leituraController.kpiMensal);
+router.get("/taxa-retencao", leituraController.taxaRetencao);
 
 module.exports = router;

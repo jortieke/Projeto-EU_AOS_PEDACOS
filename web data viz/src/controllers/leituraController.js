@@ -44,8 +44,20 @@ function kpiMensal(req, res) {
 }
 
 
+function taxaRetencao(req, res) {
+    leituraModel.taxaRetencaoMedia()
+        .then(resultado => {
+            res.status(200).json(resultado[0]);
+        })
+        .catch(erro => {
+            console.log("Erro ao calcular taxa de retenção:", erro);
+            res.status(500).json(erro);
+        });
+}
+
 module.exports = {
     listar,
     salvar,
-    kpiMensal
+    kpiMensal,
+    taxaRetencao
 };

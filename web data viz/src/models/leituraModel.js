@@ -50,9 +50,23 @@ function kpiMensal(idUsuario) {
     return database.executar(instrucao);
 }
 
+function taxaRetencaoMedia() {
+    var instrucao = `
+        SELECT 
+            AVG(qtd / 110) AS retencaoMedia
+        FROM (
+            SELECT COUNT(*) AS qtd
+            FROM leitura
+            GROUP BY fkUsuario
+        ) AS t;
+    `;
+    return database.executar(instrucao);
+}
+
 
 module.exports = {
     listar,
     salvar,
-    kpiMensal
+    kpiMensal,
+    taxaRetencaoMedia
 };

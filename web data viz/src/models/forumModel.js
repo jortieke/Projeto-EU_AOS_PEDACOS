@@ -71,6 +71,25 @@ function listar() {
     return database.executar(instrucao);
 }
 
+function postMaisEngajado(idUsuario) {
+    var instrucao = `
+        SELECT 
+            f.idForum,
+            f.titulo,
+            COUNT(DISTINCT c.dtCurtida) AS curtidas,
+            COUNT(DISTINCT v.dtVisualizacao) AS visualizacoes,
+            (COUNT(DISTINCT c.dtCurtida) + COUNT(DISTINCT v.dtVisualizacao)) AS score
+        FROM forum f
+        LEFT JOIN curtida c ON c.fkForum = f.idForum
+        LEFT JOIN visualizacao v ON v.fkForum = f.idForum
+        WHERE f.fkUsuario = ${idUsuario}
+        GROUP BY f.idForum
+        ORDER BY score DESC
+        LIMIT 1;
+    `;
+    return database.executar(instrucao);
+}
+
 module.exports = {
     contarPostagens,
     contarCurtidasRecebidas,
@@ -78,5 +97,6 @@ module.exports = {
     criarPostagem,
     registrarCurtida,
     registrarVisualizacao,
-    listar
+    listar,
+    postMaisEngajado
 };
