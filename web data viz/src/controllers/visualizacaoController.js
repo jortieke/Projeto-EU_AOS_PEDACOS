@@ -1,6 +1,7 @@
 var visualizacaoModel = require("../models/visualizacaoModel");
 
 function registrar(req, res) {
+    console.log("REGISTRANDO VIEW:", req.body);
     var fkUsuario = req.body.fkUsuario;
     var fkForum = req.body.fkForum;
 

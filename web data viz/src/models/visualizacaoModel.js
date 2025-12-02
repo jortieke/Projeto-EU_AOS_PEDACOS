@@ -2,8 +2,8 @@ var database = require("../database/config");
 
 function registrar(fkUsuario, fkForum) {
     var instrucao = `
-        INSERT INTO visualizacao (fkUsuario, fkForum)
-        VALUES (${fkUsuario}, ${fkForum});
+        INSERT INTO visualizacao (idVisualizacao, fkUsuario, fkForum)
+        VALUES (DEFAULT, ${fkUsuario}, ${fkForum});
     `;
     return database.executar(instrucao);
 }
