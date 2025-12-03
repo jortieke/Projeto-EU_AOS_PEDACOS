@@ -624,3 +624,7 @@ footer span{
 .div.esquerda::before { right: -6px; }
 .div.direita::before { left: -6px; }
 
+.timeline img{
+    height: 150px; 
+    width: 200px;
+}

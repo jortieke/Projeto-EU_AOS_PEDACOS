@@ -42,7 +42,7 @@
         <div class="acessar">
             <span id="b_usuario">usuário</span>
         </div>
-        <div>
+        <div id="user">
             <img src="imgs/user.png" alt="" style="width: 100px; height: 60px; padding-top: 5px; padding-left: 40px;">
         </div>
         <div>
@@ -51,7 +51,6 @@
         </div>
         <div class="menu_lateral" id="menu_lateral">
             <ul class="menu">
-                <li><a href="sobre-mim.html">Configurações</a></li>
                 <li><a href="painel.html">Verificar Painel</a></li>
                 <li onclick="sair()"><a href="index.html">Sair</a></li>
             </ul>
@@ -137,6 +136,9 @@
             document.getElementById('logout').style.display = 'Flex';
         } else {
             document.getElementById('login').style.display = 'Flex';
+              if (sessionStorage.NOME_USUARIO == 'Anderson'){
+                user.innerHTML = `<img src="imgs/anderson.jpg" alt="" style="width: 60px; height: 60px; padding-top: 5px; border-radius: 30px;">`
+            }
             document.getElementById('logout').style.display = 'None';
         }
     }
